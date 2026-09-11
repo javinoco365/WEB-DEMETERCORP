@@ -1,67 +1,47 @@
 # Módulo de alta de inversores — especificación funcional
 
-Especificación funcional, no técnica. La implementación (framework, estructura de carpetas, despliegue) se decide según cómo esté montado el proyecto en cada momento. Los textos marcados como literales no se reescriben: están pensados para un inversor profesional, no son texto de relleno.
+Especificación funcional, no técnica. La implementación (estructura de carpetas, despliegue) se decide según cómo esté montado el proyecto en cada momento. Los textos marcados como literales no se reescriben: están pensados para un inversor profesional, no son texto de relleno.
 
-> Placeholders pendientes de valor real antes de publicar — no rellenar con un valor de ejemplo, deben confirmarse:
-> - `[dominio]` — dominio bajo el que vivirá `inversores.[dominio]`.
-> - `[correo]` — dirección para ejercicio de derechos GDPR en el aviso de consentimiento (Paso de consentimiento).
+## Historial de decisiones
 
-## Decisiones que sustituyen partes de esta especificación
+La especificación original (recibida el 2026-09-11) planteaba guardar cada alta en una tabla Supabase con políticas RLS, y revisarlas desde un panel privado autenticado. Ese mismo día, antes de empezar a construir, se decidió con el cliente sustituir ambas piezas:
 
-Confirmado con el cliente el 2026-09-11, por encima de lo que diga el resto del documento en caso de conflicto:
+- **Sin Supabase.** No hay tabla, no hay políticas RLS que verificar.
+- **Sin panel.** No se construye ninguna sección de revisión autenticada.
+- **Entrega: email directo.** Cada envío del formulario se manda por correo, con el mismo mecanismo que ya usa el formulario de contacto de `/contacto` (Resend, vía una API route de servidor). El propio correo llega formateado campo por campo, con los vacíos marcados como `NO CONSTA`, para servir directamente como ficha de inversor.
 
-- **Sin Supabase.** No hay tabla `alta_inversor`, no hay políticas RLS, no hay clave anónima que verificar. Todo lo descrito en "Regla de seguridad", "Tabla de respuestas" y el punto 1 de "Orden de construcción" queda sin efecto.
-- **Sin panel.** No se construye ninguna sección de revisión autenticada. La sección "En el panel" queda sin efecto.
-- **Entrega: email directo.** Cada envío del formulario se manda por correo (vía Resend, igual que el formulario de contacto existente en `/contacto`) a una dirección de destino única, en lugar de guardarse en base de datos. El propio correo se formatea campo por campo, con los vacíos marcados como `NO CONSTA`, para servir directamente como ficha de inversor — sustituye al botón "copiar como texto plano" del panel original.
-- El resto de la especificación (los 27 campos, los textos literales, la lógica condicional, el comportamiento del formulario, el diseño y la regla de aislamiento del despliegue) se mantiene tal cual.
+El resto de la especificación original —los 27 campos, los textos literales, la lógica condicional, el comportamiento del formulario, el diseño y la regla de aislamiento del despliegue— se mantiene. Este documento ya incorpora esos cambios; no hace falta leer ninguna versión anterior.
+
+**Valores confirmados** (ya no hay placeholders pendientes):
+- Dominio del formulario: `inversores.demetercorp.es`
+- Dirección de destino de cada alta: `javiernovoa@demetergod.com`
+- Correo de contacto para ejercicio de derechos GDPR (en el aviso de consentimiento): `info@demetercorp.es`
 
 ## Qué hay que construir
 
-Un formulario público de alta de inversores para Grupo Demeter, alojado en una dirección propia, completamente aislado del panel privado de la app, que guarda las respuestas en Supabase y las deja disponibles para revisarlas desde el panel.
+Un formulario público de alta de inversores para Grupo Demeter, alojado en `inversores.demetercorp.es`, completamente aislado del resto de la web corporativa, que al enviarse remite un correo con la respuesta completa a `javiernovoa@demetergod.com`.
 
-## Regla de seguridad — la más importante
+## Cómo se entrega cada respuesta
 
-La página pública se sirve en el navegador del inversor, así que la clave anónima de Supabase es visible para cualquiera. Toda la seguridad depende de lo que esa clave tenga permitido hacer.
-
-Requisitos, sin excepción:
-
-1. La política RLS de la tabla de respuestas permite `INSERT` para el rol anónimo y nada más. Sin `SELECT`, sin `UPDATE`, sin `DELETE`.
-2. Ninguna otra tabla del proyecto es accesible desde el rol anónimo.
-3. La lectura de respuestas se hace solo desde el panel, con usuario autenticado.
-4. **Comprobación obligatoria** antes de dar por terminado: intentar leer la tabla con la clave anónima desde fuera de la app y confirmar que devuelve vacío o error. Si devuelve filas, está mal.
+- El envío del formulario llega a una API route de servidor (no se llama a ningún servicio externo desde el navegador).
+- Esa API route compone un correo de texto, campo por campo en el mismo orden que la especificación, con los campos vacíos marcados como `NO CONSTA`, y lo envía por Resend a `javiernovoa@demetergod.com`.
+- El correo también incluye los campos de contexto: `origen` y `enviado_por` (leídos de los parámetros de la URL con la que el inversor abrió el formulario), la fecha y hora de envío, y si aceptó el consentimiento.
+- La clave de Resend (`RESEND_API_KEY`) vive solo en las variables de entorno del servidor de este despliegue. Nunca se expone al navegador ni forma parte del bundle público.
+- No hay almacenamiento propio: si el correo no llega, la respuesta se pierde. Aceptado como riesgo dado que se prescinde de base de datos.
 
 ## Regla de aislamiento
 
 El despliegue público no debe revelar nada de la app interna:
 
-- Despliegue independiente del panel, aunque compartan repositorio.
-- La página pública no contiene menú, login, enlaces al panel ni referencias a rutas internas.
-- No reutiliza componentes que arrastren rutas, nombres de tablas o textos del panel.
-- Las variables de entorno del despliegue público incluyen únicamente la URL de Supabase y la clave anónima. Ninguna clave de servicio.
+- Despliegue independiente en Vercel, aunque comparta repositorio con demetercorp.es (proyecto propio, con su propio "Root Directory").
+- La página pública no contiene menú, login, enlaces al resto del sitio ni referencias a rutas internas.
+- No reutiliza componentes de la web corporativa que arrastren rutas, nombres internos o textos ajenos a este formulario.
+- Las variables de entorno del despliegue público incluyen únicamente lo necesario para enviar el correo (`RESEND_API_KEY`, dirección de destino). Ninguna otra clave.
 - Sin mapa del sitio, sin indexación: `noindex` en la página.
 
 ## Direcciones
 
-- Formulario: `inversores.[dominio]`
-- Panel: donde ya esté. No se toca.
-
-## Tabla de respuestas
-
-Nombre sugerido: `alta_inversor`
-
-### Campos de sistema
-
-- `id`
-- `creado_en`
-- `origen` (del parámetro de la URL)
-- `enviado_por` (del parámetro de la URL)
-- `consentimiento_aceptado` (booleano)
-- `consentimiento_fecha`
-- `estado_revision`: `PENDIENTE` / `PROCESADA` / `DESCARTADA` — por defecto `PENDIENTE`
-
-### Campos del formulario
-
-Los 27 de la sección siguiente.
+- Formulario: `inversores.demetercorp.es`
 
 ## Campos del formulario
 
@@ -123,9 +103,9 @@ Texto de apertura: *"Solo lo que tenga claro; si no trabaja con una cifra fija, 
 
 ### Consentimiento
 
-Casilla obligatoria antes de enviar (`consentimiento_aceptado`), con este texto encima, literal:
+Casilla obligatoria antes de enviar, con este texto encima, literal:
 
-> Responsable: Demeter Soluciones Estratégicas, S.L. — CIF B22629844 — Calle Botticelli 1, 21450 Cartaya (Huelva). Finalidad: gestionar su perfil inversor y remitirle oportunidades que encajen con los criterios indicados. Legitimación: su consentimiento. Conservación: mientras se mantenga la relación o hasta que solicite la supresión. Destinatarios: no cedemos sus datos a terceros. Derechos: acceso, rectificación, supresión y oposición escribiendo a [correo].
+> Responsable: Demeter Soluciones Estratégicas, S.L. — CIF B22629844 — Calle Botticelli 1, 21450 Cartaya (Huelva). Finalidad: gestionar su perfil inversor y remitirle oportunidades que encajen con los criterios indicados. Legitimación: su consentimiento. Conservación: mientras se mantenga la relación o hasta que solicite la supresión. Destinatarios: no cedemos sus datos a terceros. Derechos: acceso, rectificación, supresión y oposición escribiendo a info@demetercorp.es.
 
 ### Pantalla final — "Recibido"
 
@@ -133,12 +113,12 @@ Texto: *"Gracias, a partir de ahora solo le escribiremos cuando tengamos algo qu
 
 ## Comportamiento
 
-- Guarda el progreso en el propio navegador para que no se pierda si cierra a medias.
+- Guarda el progreso en el propio navegador (`localStorage`) para que no se pierda si cierra a medias.
 - No envía nada hasta el último paso.
 - Errores de validación junto al campo, no en un aviso general arriba.
 - Funciona en móvil: la mayoría lo van a abrir desde el teléfono.
-- Anti-spam: campo trampa oculto y límite de envíos por dirección IP. Sin captcha.
-- Lee `origen` y `enviado_por` de los parámetros de la URL y los guarda con la respuesta.
+- Anti-spam: campo trampa oculto (honeypot) y límite de envíos por dirección IP en la API route. Sin captcha.
+- Lee `origen` y `enviado_por` de los parámetros de la URL y los incluye en el correo enviado.
 
 ## Diseño
 
@@ -146,20 +126,9 @@ Texto: *"Gracias, a partir de ahora solo le escribiremos cuando tengamos algo qu
 - Logo de Demeter en la cabecera, sin enlazar a ningún sitio.
 - Sobrio. El destinatario es un inversor profesional, no un usuario de una landing.
 
-## En el panel
-
-Una sección nueva, solo para usuarios autenticados:
-
-- Lista de altas recibidas, las pendientes primero.
-- Ficha de cada respuesta con todos los campos.
-- Cambiar estado a `PROCESADA` o `DESCARTADA`.
-- Botón que copia la respuesta como texto plano, campo por campo, con los vacíos marcados como `NO CONSTA`. Ese texto es el que se procesa después como ficha de inversor.
-- Aviso por correo a javiernovoacontreras@gmail.com con cada alta nueva.
-
 ## Orden de construcción
 
-1. Tabla y políticas RLS. Verificar que la clave anónima no puede leer.
-2. Formulario público funcionando en local.
-3. Sección del panel.
-4. Despliegue independiente y subdominio.
-5. Repetir la verificación del punto 1 ya en producción.
+1. Formulario público funcionando en local (7 pasos, validación, guardado de progreso, envío a una API route local que solo hace `console.log` del payload).
+2. API route de envío por email funcionando en local contra Resend (correo de prueba real).
+3. Despliegue independiente y subdominio `inversores.demetercorp.es`, con `noindex` y solo las variables de entorno estrictamente necesarias.
+4. Prueba de extremo a extremo en producción: enviar el formulario real y confirmar que el correo llega a `javiernovoa@demetergod.com` con el formato correcto.
