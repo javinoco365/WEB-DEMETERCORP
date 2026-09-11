@@ -4,44 +4,42 @@ Especificación funcional, no técnica. La implementación (estructura de carpet
 
 ## Historial de decisiones
 
-La especificación original (recibida el 2026-09-11) planteaba guardar cada alta en una tabla Supabase con políticas RLS, y revisarlas desde un panel privado autenticado. Ese mismo día, antes de empezar a construir, se decidió con el cliente sustituir ambas piezas:
+La especificación original (recibida el 2026-09-11) planteaba guardar cada alta en una tabla Supabase con políticas RLS, revisarlas desde un panel privado autenticado, y publicar el formulario en un despliegue de Vercel independiente sobre `inversores.demetercorp.es`. Ese mismo día, antes de empezar a construir y ya con el formulario funcionando en local, se decidió con el cliente sustituir esas piezas, en dos momentos:
 
+**Primera decisión — antes de escribir código:**
 - **Sin Supabase.** No hay tabla, no hay políticas RLS que verificar.
 - **Sin panel.** No se construye ninguna sección de revisión autenticada.
-- **Entrega: email directo.** Cada envío del formulario se manda por correo, con el mismo mecanismo que ya usa el formulario de contacto de `/contacto` (Resend, vía una API route de servidor). El propio correo llega formateado campo por campo, con los vacíos marcados como `NO CONSTA`, para servir directamente como ficha de inversor.
+- **Entrega: email directo**, en vez de base de datos. El correo llega formateado campo por campo, con los vacíos marcados como `NO CONSTA`, para servir directamente como ficha de inversor.
 
-El resto de la especificación original —los 27 campos, los textos literales, la lógica condicional, el comportamiento del formulario, el diseño y la regla de aislamiento del despliegue— se mantiene. Este documento ya incorpora esos cambios; no hace falta leer ninguna versión anterior.
+**Segunda decisión — tras terminar el formulario en local:**
+- **Sin Resend.** El cliente no tiene cuenta en Resend ni quiere crear una. El envío se hace por **SMTP de Gmail** (librería `nodemailer`), usando la cuenta de Gmail del cliente como remitente técnico. Sin alta en ningún servicio nuevo.
+- **Sin despliegue independiente.** El formulario no vive en un proyecto de Vercel aparte ni en `inversores.demetercorp.es`. Se integra como una página más del sitio corporativo ya existente (`demetercorp.es/alta-inversores`), dentro del mismo proyecto de Vercel, compartiendo el menú y el pie de página del resto de la web. La regla de aislamiento del despliegue (sin menú, sin enlaces, subdominio propio, variables de entorno mínimas) **queda sin efecto** — el cliente prefirió simplicidad sobre aislamiento.
+- La página conserva `noindex` en sus metadatos: no está pensada para tráfico de búsqueda, se comparte por enlace directo con `?origen=` y `?enviado_por=`.
+
+El resto de la especificación original —los 27 campos, los textos literales, la lógica condicional, el comportamiento del formulario y el diseño del propio wizard— se mantiene. Este documento ya incorpora todos los cambios; no hace falta leer ninguna versión anterior.
 
 **Valores confirmados** (ya no hay placeholders pendientes):
-- Dominio del formulario: `inversores.demetercorp.es`
+- Ruta del formulario: `demetercorp.es/alta-inversores` (página dentro del sitio corporativo, no un subdominio propio)
 - Dirección de destino de cada alta: `javiernovoa@demetergod.com`
 - Correo de contacto para ejercicio de derechos GDPR (en el aviso de consentimiento): `info@demetercorp.es`
+- Remitente técnico del correo: la cuenta de Gmail del cliente (variables `GMAIL_USER` / `GMAIL_APP_PASSWORD`)
 
 ## Qué hay que construir
 
-Un formulario público de alta de inversores para Grupo Demeter, alojado en `inversores.demetercorp.es`, completamente aislado del resto de la web corporativa, que al enviarse remite un correo con la respuesta completa a `javiernovoa@demetergod.com`.
+Un formulario de alta de inversores para Grupo Demeter, publicado en `demetercorp.es/alta-inversores`, que al enviarse remite un correo con la respuesta completa a `javiernovoa@demetergod.com`.
 
 ## Cómo se entrega cada respuesta
 
 - El envío del formulario llega a una API route de servidor (no se llama a ningún servicio externo desde el navegador).
-- Esa API route compone un correo de texto, campo por campo en el mismo orden que la especificación, con los campos vacíos marcados como `NO CONSTA`, y lo envía por Resend a `javiernovoa@demetergod.com`.
+- Esa API route compone un correo de texto, campo por campo en el mismo orden que la especificación, con los campos vacíos marcados como `NO CONSTA`, y lo envía por SMTP de Gmail (`nodemailer`) a `javiernovoa@demetergod.com`.
 - El correo también incluye los campos de contexto: `origen` y `enviado_por` (leídos de los parámetros de la URL con la que el inversor abrió el formulario), la fecha y hora de envío, y si aceptó el consentimiento.
-- La clave de Resend (`RESEND_API_KEY`) vive solo en las variables de entorno del servidor de este despliegue. Nunca se expone al navegador ni forma parte del bundle público.
+- `GMAIL_USER` y `GMAIL_APP_PASSWORD` viven solo en las variables de entorno del servidor. Nunca se exponen al navegador ni forman parte del bundle público. El remitente que verá el destinatario es esa misma cuenta de Gmail (Gmail no permite falsear el remitente sin configurar un alias "enviar como").
+- Límite de envíos por IP en la propia API route, best-effort (en memoria, se reinicia en cada cold start) combinado con un campo trampa oculto (honeypot). Sin captcha.
 - No hay almacenamiento propio: si el correo no llega, la respuesta se pierde. Aceptado como riesgo dado que se prescinde de base de datos.
-
-## Regla de aislamiento
-
-El despliegue público no debe revelar nada de la app interna:
-
-- Despliegue independiente en Vercel, aunque comparta repositorio con demetercorp.es (proyecto propio, con su propio "Root Directory").
-- La página pública no contiene menú, login, enlaces al resto del sitio ni referencias a rutas internas.
-- No reutiliza componentes de la web corporativa que arrastren rutas, nombres internos o textos ajenos a este formulario.
-- Las variables de entorno del despliegue público incluyen únicamente lo necesario para enviar el correo (`RESEND_API_KEY`, dirección de destino). Ninguna otra clave.
-- Sin mapa del sitio, sin indexación: `noindex` en la página.
 
 ## Direcciones
 
-- Formulario: `inversores.demetercorp.es`
+- Formulario: `demetercorp.es/alta-inversores`
 
 ## Campos del formulario
 
@@ -122,13 +120,13 @@ Texto: *"Gracias, a partir de ahora solo le escribiremos cuando tengamos algo qu
 
 ## Diseño
 
-- Azul principal `#0B3D63`, acento `#0079B4`, fondo claro.
-- Logo de Demeter en la cabecera, sin enlazar a ningún sitio.
+- El wizard mantiene su propia tarjeta visual (azul principal `#0B3D63`, acento `#0079B4`, fondo claro), con estilos propios sin depender de las clases globales del sitio, para no chocar con ellas ni verse afectado si cambian.
+- Vive dentro de la plantilla normal del sitio (cabecera con menú y pie de página), ya que se prescindió del aislamiento visual — ver "Historial de decisiones".
 - Sobrio. El destinatario es un inversor profesional, no un usuario de una landing.
 
 ## Orden de construcción
 
-1. Formulario público funcionando en local (7 pasos, validación, guardado de progreso, envío a una API route local que solo hace `console.log` del payload).
-2. API route de envío por email funcionando en local contra Resend (correo de prueba real).
-3. Despliegue independiente y subdominio `inversores.demetercorp.es`, con `noindex` y solo las variables de entorno estrictamente necesarias.
+1. Formulario funcionando en local (7 pasos, validación, guardado de progreso, envío a una API route local que solo hace `console.log` del payload). Hecho como mini-app aislada primero, luego migrado dentro del sitio corporativo — ver "Historial de decisiones".
+2. API route de envío por email funcionando en local (SMTP de Gmail, correo de prueba real).
+3. Integración en el sitio corporativo como `/alta-inversores`, con las variables de entorno (`GMAIL_USER`, `GMAIL_APP_PASSWORD`) añadidas al proyecto de Vercel ya existente.
 4. Prueba de extremo a extremo en producción: enviar el formulario real y confirmar que el correo llega a `javiernovoa@demetergod.com` con el formato correcto.

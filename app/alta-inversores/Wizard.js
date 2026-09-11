@@ -2,10 +2,11 @@
 
 import { useEffect, useState } from 'react'
 import { STEPS } from './lib/fields'
+import styles from './wizard.module.css'
 
 const STORAGE_KEY = 'demeter-inversores-draft'
 
-export default function Page() {
+export default function Wizard() {
   const [step, setStep] = useState(1)
   const [answers, setAnswers] = useState({})
   const [errors, setErrors] = useState({})
@@ -95,7 +96,7 @@ export default function Page() {
     setStatus('sending')
     setSendError('')
     try {
-      const res = await fetch('/api/enviar', {
+      const res = await fetch('/api/alta-inversores', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -121,9 +122,8 @@ export default function Page() {
 
   if (status === 'sent') {
     return (
-      <main className="wrap">
-        <div className="card center">
-          <img className="logo" src="/logos/demeter-corp.png" alt="Demeter" />
+      <main className={styles.wrap}>
+        <div className={`${styles.card} ${styles.center}`}>
           <h1>Recibido</h1>
           <p>Gracias, a partir de ahora solo le escribiremos cuando tengamos algo que encaje con lo que nos ha contado.</p>
         </div>
@@ -132,42 +132,41 @@ export default function Page() {
   }
 
   return (
-    <main className="wrap">
-      <div className="card">
-        <img className="logo" src="/logos/demeter-corp.png" alt="Demeter" />
-        <div className="progress">
-          <div className="progress-fill" style={{ width: `${(step / STEPS.length) * 100}%` }} />
+    <main className={styles.wrap}>
+      <div className={styles.card}>
+        <div className={styles.progress}>
+          <div className={styles.progressFill} style={{ width: `${(step / STEPS.length) * 100}%` }} />
         </div>
-        <span className="step-count">
+        <span className={styles.stepCount}>
           Paso {step} de {STEPS.length}
         </span>
         <h1>{current.title}</h1>
-        {current.intro && <p className="intro">{current.intro}</p>}
+        {current.intro && <p className={styles.intro}>{current.intro}</p>}
 
-        <div className="fields">
+        <div className={styles.fields}>
           {visibleFields.map((field) => (
-            <div className="field" key={field.name}>
-              <label className="field-label">
+            <div className={styles.field} key={field.name}>
+              <label className={styles.fieldLabel}>
                 {field.label}
                 {field.required && ' *'}
               </label>
-              {field.help && <span className="field-help">{field.help}</span>}
-              <FieldInput field={field} value={answers[field.name]} setValue={setValue} toggleValue={toggleValue} />
-              {errors[field.name] && <span className="field-error">{errors[field.name]}</span>}
+              {field.help && <span className={styles.fieldHelp}>{field.help}</span>}
+              <FieldInput field={field} value={answers[field.name]} setValue={setValue} toggleValue={toggleValue} styles={styles} />
+              {errors[field.name] && <span className={styles.fieldError}>{errors[field.name]}</span>}
             </div>
           ))}
         </div>
 
         {isLastStep && (
-          <div className="consent">
-            <p className="consent-text">
+          <div className={styles.consent}>
+            <p className={styles.consentText}>
               Responsable: Demeter Soluciones Estratégicas, S.L. — CIF B22629844 — Calle Botticelli 1, 21450 Cartaya
               (Huelva). Finalidad: gestionar su perfil inversor y remitirle oportunidades que encajen con los
               criterios indicados. Legitimación: su consentimiento. Conservación: mientras se mantenga la relación o
               hasta que solicite la supresión. Destinatarios: no cedemos sus datos a terceros. Derechos: acceso,
               rectificación, supresión y oposición escribiendo a info@demetercorp.es.
             </p>
-            <label className="consent-check">
+            <label className={styles.consentCheck}>
               <input
                 type="checkbox"
                 checked={consent}
@@ -178,30 +177,30 @@ export default function Page() {
               />
               <span>He leído y acepto el tratamiento de mis datos en los términos indicados. *</span>
             </label>
-            {consentError && <span className="field-error">{consentError}</span>}
+            {consentError && <span className={styles.fieldError}>{consentError}</span>}
           </div>
         )}
 
-        <label className="hp" aria-hidden="true">
+        <label className={styles.hp} aria-hidden="true">
           Página web
           <input type="text" tabIndex="-1" autoComplete="off" value={honeypot} onChange={(e) => setHoneypot(e.target.value)} />
         </label>
 
-        {status === 'error' && <p className="send-error">{sendError}</p>}
+        {status === 'error' && <p className={styles.sendError}>{sendError}</p>}
 
-        <div className="actions">
+        <div className={styles.actionsRow}>
           {step > 1 && (
-            <button type="button" className="btn ghost" onClick={goBack} disabled={status === 'sending'}>
+            <button type="button" className={`${styles.btn} ${styles.ghost}`} onClick={goBack} disabled={status === 'sending'}>
               Atrás
             </button>
           )}
           {!isLastStep && (
-            <button type="button" className="btn primary" onClick={goNext}>
+            <button type="button" className={`${styles.btn} ${styles.primary}`} onClick={goNext}>
               {step === 1 ? 'Empezar' : 'Siguiente'}
             </button>
           )}
           {isLastStep && (
-            <button type="button" className="btn primary" onClick={submit} disabled={status === 'sending'}>
+            <button type="button" className={`${styles.btn} ${styles.primary}`} onClick={submit} disabled={status === 'sending'}>
               {status === 'sending' ? 'Enviando…' : 'Enviar solicitud'}
             </button>
           )}
@@ -211,7 +210,7 @@ export default function Page() {
   )
 }
 
-function FieldInput({ field, value, setValue, toggleValue }) {
+function FieldInput({ field, value, setValue, toggleValue, styles }) {
   if (field.type === 'text' || field.type === 'email' || field.type === 'tel') {
     return <input type={field.type} value={value || ''} onChange={(e) => setValue(field.name, e.target.value)} />
   }
@@ -220,9 +219,9 @@ function FieldInput({ field, value, setValue, toggleValue }) {
   }
   if (field.type === 'radio') {
     return (
-      <div className="options">
+      <div className={styles.options}>
         {field.options.map((opt) => (
-          <label className="option" key={opt}>
+          <label className={styles.option} key={opt}>
             <input type="radio" name={field.name} checked={value === opt} onChange={() => setValue(field.name, opt)} />
             <span>{opt}</span>
           </label>
@@ -232,9 +231,9 @@ function FieldInput({ field, value, setValue, toggleValue }) {
   }
   if (field.type === 'checkbox') {
     return (
-      <div className="options">
+      <div className={styles.options}>
         {field.options.map((opt) => (
-          <label className="option" key={opt}>
+          <label className={styles.option} key={opt}>
             <input type="checkbox" checked={(value || []).includes(opt)} onChange={() => toggleValue(field.name, opt)} />
             <span>{opt}</span>
           </label>
