@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server'
-import { formatAnswersAsText } from '../../lib/fields'
-import { isMailerConfigured, sendInvestorEmail } from '../../lib/mailer'
+import { formatAnswersAsText } from '../../alta-inversores/lib/fields'
+import { isMailerConfigured, sendInvestorEmail } from '../../alta-inversores/lib/mailer'
 
 export const runtime = 'nodejs'
 
