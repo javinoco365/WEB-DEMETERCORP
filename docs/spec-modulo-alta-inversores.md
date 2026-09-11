@@ -6,6 +6,15 @@ Especificación funcional, no técnica. La implementación (framework, estructur
 > - `[dominio]` — dominio bajo el que vivirá `inversores.[dominio]`.
 > - `[correo]` — dirección para ejercicio de derechos GDPR en el aviso de consentimiento (Paso de consentimiento).
 
+## Decisiones que sustituyen partes de esta especificación
+
+Confirmado con el cliente el 2026-09-11, por encima de lo que diga el resto del documento en caso de conflicto:
+
+- **Sin Supabase.** No hay tabla `alta_inversor`, no hay políticas RLS, no hay clave anónima que verificar. Todo lo descrito en "Regla de seguridad", "Tabla de respuestas" y el punto 1 de "Orden de construcción" queda sin efecto.
+- **Sin panel.** No se construye ninguna sección de revisión autenticada. La sección "En el panel" queda sin efecto.
+- **Entrega: email directo.** Cada envío del formulario se manda por correo (vía Resend, igual que el formulario de contacto existente en `/contacto`) a una dirección de destino única, en lugar de guardarse en base de datos. El propio correo se formatea campo por campo, con los vacíos marcados como `NO CONSTA`, para servir directamente como ficha de inversor — sustituye al botón "copiar como texto plano" del panel original.
+- El resto de la especificación (los 27 campos, los textos literales, la lógica condicional, el comportamiento del formulario, el diseño y la regla de aislamiento del despliegue) se mantiene tal cual.
+
 ## Qué hay que construir
 
 Un formulario público de alta de inversores para Grupo Demeter, alojado en una dirección propia, completamente aislado del panel privado de la app, que guarda las respuestas en Supabase y las deja disponibles para revisarlas desde el panel.
