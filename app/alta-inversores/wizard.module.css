@@ -2,9 +2,6 @@
 .card { width: 100%; background: #ffffff; border: 1px solid #d7dfe6; border-radius: 6px; padding: 32px 24px; box-shadow: 0 10px 40px rgba(11, 61, 99, .08) }
 .card.center { text-align: center }
 .card h1 { font-family: inherit; font-size: 26px; margin: 10px 0 12px; color: #0b3d63; font-weight: 700 }
-.progress { height: 4px; background: #d7dfe6; border-radius: 2px; overflow: hidden; margin-bottom: 8px }
-.progressFill { height: 100%; background: #0079b4; transition: width .25s ease }
-.stepCount { font-size: 12px; letter-spacing: .08em; color: #5b6b78; text-transform: uppercase }
 .intro { color: #5b6b78; font-size: 15px; margin-bottom: 8px }
 .fields { display: grid; gap: 22px; margin-top: 20px }
 .field { display: grid; gap: 6px }
@@ -17,6 +14,9 @@
 .options { display: grid; gap: 8px }
 .option { display: flex; align-items: flex-start; gap: 8px; font-size: 14px; color: #122437 }
 .option input { margin-top: 3px }
+.rangeWrap { display: grid; gap: 10px }
+.rangeWrap input[type=range] { width: 100%; accent-color: #0b3d63 }
+.rangeValue { font-size: 17px; font-weight: 700; color: #0b3d63 }
 .fieldError { font-size: 12px; color: #b3261e }
 .consent { margin-top: 28px; padding-top: 20px; border-top: 1px solid #d7dfe6; display: grid; gap: 12px }
 .consentText { font-size: 12px; color: #5b6b78; line-height: 1.6 }
@@ -24,14 +24,11 @@
 .consentCheck input { margin-top: 3px }
 .hp { position: absolute !important; left: -9999px !important }
 .sendError { color: #b3261e; font-size: 14px; margin-top: 16px }
-.actionsRow { display: flex; justify-content: space-between; gap: 12px; margin-top: 28px }
+.actionsRow { display: flex; justify-content: flex-end; gap: 12px; margin-top: 28px }
 .btn { padding: 13px 20px; border-radius: 4px; border: 1px solid #d7dfe6; background: #ffffff; color: #0b3d63; font-weight: 700; font-size: 14px; cursor: pointer; font-family: inherit }
-.btn.primary { background: #0b3d63; border-color: #0b3d63; color: #ffffff; margin-left: auto }
+.btn.primary { background: #0b3d63; border-color: #0b3d63; color: #ffffff }
 .btn.primary:disabled { opacity: .6; cursor: default }
-.btn.ghost { background: transparent }
 @media (max-width: 480px) {
   .card { padding: 26px 18px }
   .card h1 { font-size: 22px }
-  .actionsRow { flex-direction: column-reverse }
-  .btn.primary { margin-left: 0 }
 }

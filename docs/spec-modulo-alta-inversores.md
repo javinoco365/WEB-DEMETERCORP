@@ -16,7 +16,11 @@ La especificación original (recibida el 2026-09-11) planteaba guardar cada alta
 - **Sin despliegue independiente.** El formulario no vive en un proyecto de Vercel aparte ni en `inversores.demetercorp.es`. Se integra como una página más del sitio corporativo ya existente (`demetercorp.es/alta-inversores`), dentro del mismo proyecto de Vercel, compartiendo el menú y el pie de página del resto de la web. La regla de aislamiento del despliegue (sin menú, sin enlaces, subdominio propio, variables de entorno mínimas) **queda sin efecto** — el cliente prefirió simplicidad sobre aislamiento.
 - La página conserva `noindex` en sus metadatos: no está pensada para tráfico de búsqueda, se comparte por enlace directo con `?origen=` y `?enviado_por=`.
 
-El resto de la especificación original —los 27 campos, los textos literales, la lógica condicional, el comportamiento del formulario y el diseño del propio wizard— se mantiene. Este documento ya incorpora todos los cambios; no hace falta leer ninguna versión anterior.
+**Tercera decisión — tras la primera prueba real en producción (correo recibido correctamente):**
+- **Formulario corto, una sola pantalla.** El wizard de 7 pasos / 27 campos resultaba demasiado largo. Se sustituye por un formulario de **9 campos en una única pantalla, sin pasos ni barra de progreso**: nombre y apellidos, email, teléfono, qué busca ahora, tipologías, zonas donde compra, importe máximo de inversión, qué le hace descartar una operación (ahora opcional, ya no obligatorio) y cómo prefiere que le avisemos. El resto de los 27 campos originales se elimina del formulario (no se pregunta, no llega en el correo). El campo "Ticket" (rango por tramos) se sustituye por un **slider** de importe máximo de inversión (0 a 25 M€, pasos de 50.000 €) con el valor en euros a la vista en tiempo real.
+- Sigue enviándose por email con el mismo mecanismo (SMTP de Gmail), con los campos formateados uno por uno y los vacíos como `NO CONSTA`.
+
+El resto de la especificación original que sigue vigente —los textos literales, el comportamiento del formulario (guardado de progreso, validación por campo, honeypot, límite por IP) y el diseño— se mantiene. Este documento ya incorpora todos los cambios; no hace falta leer ninguna versión anterior. La lista de 27 campos original queda como referencia histórica más abajo, pero **el formulario real hoy solo usa los 9 campos de la tercera decisión**.
 
 **Valores confirmados** (ya no hay placeholders pendientes):
 - Ruta del formulario: `demetercorp.es/alta-inversores` (página dentro del sitio corporativo, no un subdominio propio)
@@ -41,9 +45,25 @@ Un formulario de alta de inversores para Grupo Demeter, publicado en `demetercor
 
 - Formulario: `demetercorp.es/alta-inversores`
 
-## Campos del formulario
+## Campos del formulario actual
 
-Siete pasos, uno por pantalla, con barra de progreso. Los marcados con `*` son obligatorios.
+Una sola pantalla, sin pasos. Los marcados con `*` son obligatorios.
+
+1. **Nombre y apellidos** * — texto
+2. **Email** * — email, validado
+3. **Teléfono** * — texto
+4. **Qué busca ahora** * — una opción: Comprar en renta / Comprar para reformar y vender / Comprar suelo para desarrollar / Vender activos propios / Entrar como socio / Varias
+5. **Tipologías** — varias: Vivienda / Edificio completo / Local comercial / Supermercado o retail con operador / Oficinas / Naves o logística / Hotelero / Residencias de mayores / Suelo urbano / Suelo rústico / Garajes y trasteros / Otro
+6. **Zonas donde compra** * — texto largo. Ayuda: *"Cuanto más concreto mejor, 'Andalucía' y 'Huelva capital' nos llevan a mandarle cosas distintas."*
+7. **Importe máximo de inversión** * — slider, 0 a 25.000.000 €, pasos de 50.000 €, valor por defecto 500.000 €. Se muestra formateado en euros en tiempo real; al llegar al máximo se indica "25.000.000 €+".
+8. **Qué le hace descartar una operación de entrada** — texto largo, opcional. Ayuda: *"Si sabemos qué no quiere ver, no se lo mandamos."*
+9. **Cómo prefiere que le avisemos** — una opción: Llamada / WhatsApp / Email
+
+Más la casilla de **consentimiento** (obligatoria, ver más abajo).
+
+### Campos originales (27), fuera de uso — referencia histórica
+
+La especificación inicial pedía siete pasos con estos 27 campos; se conservan aquí solo como referencia de lo que se descartó en la tercera decisión, no describen el formulario actual.
 
 ### Paso 1 — Presentación
 
