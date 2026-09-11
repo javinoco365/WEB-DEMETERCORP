@@ -1,0 +1,11 @@
+export const metadata={title:'Política de cookies | Demeter Corp'}
+export default function Cookies(){return <main className="legal-page"><div className="shell prose"><span className="eyebrow">COOKIES</span><h1>Política de Cookies</h1>
+<p>Esta política se aplica a <strong>demetercorp.es</strong>.</p>
+<h2>1. Qué son las cookies</h2><p>Las cookies son pequeños archivos o tecnologías similares que un sitio web puede almacenar o consultar en el dispositivo del usuario para prestar determinadas funciones.</p>
+<h2>2. Configuración inicial de esta web</h2><p>La versión inicial de demetercorp.es está diseñada sin herramientas de publicidad, marketing o analítica de terceros y sin WordPress, WooCommerce, Elementor o Wistia. Por tanto, no se prevé instalar cookies no esenciales por esas herramientas.</p>
+<h2>3. Cookies técnicas</h2><p>El alojamiento y la infraestructura técnica pueden utilizar mecanismos estrictamente necesarios para seguridad, funcionamiento o protección frente a abuso. Estos mecanismos no se utilizan con fines publicitarios.</p>
+<h2>4. Formulario de contacto</h2><p>El envío del formulario se procesa en el servidor y se entrega por correo electrónico. La configuración inicial no necesita almacenar una cookie de marketing para realizar el envío.</p>
+<h2>5. Cambios futuros</h2><p>Si en el futuro se incorporan servicios de analítica, vídeo embebido, mapas, publicidad, seguimiento u otras tecnologías que requieran consentimiento, esta política se actualizará y se incorporará, cuando resulte necesario, un sistema de gestión del consentimiento antes de activar dichas tecnologías.</p>
+<h2>6. Control del navegador</h2><p>El usuario puede configurar su navegador para bloquear, eliminar o limitar cookies. Algunas funciones técnicas podrían verse afectadas.</p>
+<h2>7. Contacto</h2><p>Las consultas sobre privacidad y cookies pueden remitirse mediante el formulario de Contacto de esta web.</p>
+<p className="legal-note">Esta política sustituye el listado de cookies propio de la actual demetergod.com, ya que demetercorp.es utilizará una tecnología y configuración diferentes. fileciteturn2file0</p></div></main>}
