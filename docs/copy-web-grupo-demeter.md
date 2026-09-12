@@ -371,7 +371,7 @@ Mensaje de confirmación: "Gracias. Hemos recibido su propuesta. El equipo corre
 
 ## Anexo técnico — para la fase de implementación (no es copy)
 
-- **Paleta**: azul oscuro `#0B3D63` (dominante), azul medio `#12588C`, acento `#0079B4`, fondos `#F5F7FA` y blanco, texto `#111827`. Sustituye a la paleta actual del sitio (navy `#0b2238` + dorado `#c7a25b`).
+- **Paleta**: se mantiene la actual del sitio (navy `#0b2238` + dorado `#c7a25b`, ver `app/globals.css`). El cliente descarta explícitamente la paleta azul-only propuesta en el brief (`#0B3D63`/`#12588C`/`#0079B4`, sin dorado).
 - **Tipografía**: sans geométrica de peso alto para titulares (Inter / Manrope / Archivo); cuerpo 17–18px, line-height 1.7.
 - **SEO técnico**: `H1` único por página (ya reflejado arriba), datos estructurados `Organization` y `Corporation`, Open Graph por página, palabras clave naturales: grupo empresarial Huelva, regeneración y reutilización de aguas, consultoría hídrica, inversión en infraestructura, licitación pública, patrimonio inmobiliario Andalucía.
 - **Accesibilidad**: contraste AA, navegación por teclado, alt text en imágenes.
