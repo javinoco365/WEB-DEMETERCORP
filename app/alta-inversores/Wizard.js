@@ -1,14 +1,19 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { STEPS } from './lib/fields'
+import { FIELDS } from './lib/fields'
 import styles from './wizard.module.css'
 
 const STORAGE_KEY = 'demeter-inversores-draft'
 
+function defaultAnswers() {
+  const initial = {}
+  for (const f of FIELDS) if (f.type === 'range') initial[f.name] = f.default ?? f.min
+  return initial
+}
+
 export default function Wizard() {
-  const [step, setStep] = useState(1)
-  const [answers, setAnswers] = useState({})
+  const [answers, setAnswers] = useState(defaultAnswers)
   const [errors, setErrors] = useState({})
   const [consent, setConsent] = useState(false)
   const [consentError, setConsentError] = useState('')
@@ -28,7 +33,6 @@ export default function Wizard() {
       if (raw) {
         const saved = JSON.parse(raw)
         if (saved.answers) setAnswers(saved.answers)
-        if (saved.step) setStep(saved.step)
       }
     } catch {}
     setHydrated(true)
@@ -37,13 +41,9 @@ export default function Wizard() {
   useEffect(() => {
     if (!hydrated) return
     try {
-      window.localStorage.setItem(STORAGE_KEY, JSON.stringify({ answers, step }))
+      window.localStorage.setItem(STORAGE_KEY, JSON.stringify({ answers }))
     } catch {}
-  }, [answers, step, hydrated])
-
-  const current = STEPS[step - 1]
-  const isLastStep = step === STEPS.length
-  const visibleFields = current.fields.filter((f) => !f.showIf || f.showIf(answers))
+  }, [answers, hydrated])
 
   function setValue(name, value) {
     setAnswers((prev) => ({ ...prev, [name]: value }))
@@ -62,12 +62,13 @@ export default function Wizard() {
   function isEmpty(field) {
     const v = answers[field.name]
     if (field.type === 'checkbox') return !v || v.length === 0
-    return !v || !String(v).trim()
+    if (v === undefined || v === null) return true
+    return !String(v).trim()
   }
 
-  function validateStep() {
+  function validate() {
     const nextErrors = {}
-    for (const field of visibleFields) {
+    for (const field of FIELDS) {
       if (field.required && isEmpty(field)) nextErrors[field.name] = 'Campo obligatorio.'
       if (field.type === 'email' && answers[field.name] && !/^\S+@\S+\.\S+$/.test(answers[field.name])) {
         nextErrors[field.name] = 'Email no válido.'
@@ -77,17 +78,8 @@ export default function Wizard() {
     return Object.keys(nextErrors).length === 0
   }
 
-  function goNext() {
-    if (!validateStep()) return
-    if (step < STEPS.length) setStep(step + 1)
-  }
-
-  function goBack() {
-    if (step > 1) setStep(step - 1)
-  }
-
   async function submit() {
-    if (!validateStep()) return
+    if (!validate()) return
     if (!consent) {
       setConsentError('Debe aceptar para poder enviar el formulario.')
       return
@@ -134,17 +126,14 @@ export default function Wizard() {
   return (
     <main className={styles.wrap}>
       <div className={styles.card}>
-        <div className={styles.progress}>
-          <div className={styles.progressFill} style={{ width: `${(step / STEPS.length) * 100}%` }} />
-        </div>
-        <span className={styles.stepCount}>
-          Paso {step} de {STEPS.length}
-        </span>
-        <h1>{current.title}</h1>
-        {current.intro && <p className={styles.intro}>{current.intro}</p>}
+        <h1>Cuéntenos qué busca</h1>
+        <p className={styles.intro}>
+          Menos de dos minutos. Trabajamos operaciones off-market y en exclusiva — si algo encaja con lo que nos
+          cuenta, le avisamos; si no, no le molestamos.
+        </p>
 
         <div className={styles.fields}>
-          {visibleFields.map((field) => (
+          {FIELDS.map((field) => (
             <div className={styles.field} key={field.name}>
               <label className={styles.fieldLabel}>
                 {field.label}
@@ -157,29 +146,27 @@ export default function Wizard() {
           ))}
         </div>
 
-        {isLastStep && (
-          <div className={styles.consent}>
-            <p className={styles.consentText}>
-              Responsable: Demeter Soluciones Estratégicas, S.L. — CIF B22629844 — Calle Botticelli 1, 21450 Cartaya
-              (Huelva). Finalidad: gestionar su perfil inversor y remitirle oportunidades que encajen con los
-              criterios indicados. Legitimación: su consentimiento. Conservación: mientras se mantenga la relación o
-              hasta que solicite la supresión. Destinatarios: no cedemos sus datos a terceros. Derechos: acceso,
-              rectificación, supresión y oposición escribiendo a info@demetercorp.es.
-            </p>
-            <label className={styles.consentCheck}>
-              <input
-                type="checkbox"
-                checked={consent}
-                onChange={(e) => {
-                  setConsent(e.target.checked)
-                  setConsentError('')
-                }}
-              />
-              <span>He leído y acepto el tratamiento de mis datos en los términos indicados. *</span>
-            </label>
-            {consentError && <span className={styles.fieldError}>{consentError}</span>}
-          </div>
-        )}
+        <div className={styles.consent}>
+          <p className={styles.consentText}>
+            Responsable: Demeter Soluciones Estratégicas, S.L. — CIF B22629844 — Calle Botticelli 1, 21450 Cartaya
+            (Huelva). Finalidad: gestionar su perfil inversor y remitirle oportunidades que encajen con los criterios
+            indicados. Legitimación: su consentimiento. Conservación: mientras se mantenga la relación o hasta que
+            solicite la supresión. Destinatarios: no cedemos sus datos a terceros. Derechos: acceso, rectificación,
+            supresión y oposición escribiendo a info@demetercorp.es.
+          </p>
+          <label className={styles.consentCheck}>
+            <input
+              type="checkbox"
+              checked={consent}
+              onChange={(e) => {
+                setConsent(e.target.checked)
+                setConsentError('')
+              }}
+            />
+            <span>He leído y acepto el tratamiento de mis datos en los términos indicados. *</span>
+          </label>
+          {consentError && <span className={styles.fieldError}>{consentError}</span>}
+        </div>
 
         <label className={styles.hp} aria-hidden="true">
           Página web
@@ -189,21 +176,9 @@ export default function Wizard() {
         {status === 'error' && <p className={styles.sendError}>{sendError}</p>}
 
         <div className={styles.actionsRow}>
-          {step > 1 && (
-            <button type="button" className={`${styles.btn} ${styles.ghost}`} onClick={goBack} disabled={status === 'sending'}>
-              Atrás
-            </button>
-          )}
-          {!isLastStep && (
-            <button type="button" className={`${styles.btn} ${styles.primary}`} onClick={goNext}>
-              {step === 1 ? 'Empezar' : 'Siguiente'}
-            </button>
-          )}
-          {isLastStep && (
-            <button type="button" className={`${styles.btn} ${styles.primary}`} onClick={submit} disabled={status === 'sending'}>
-              {status === 'sending' ? 'Enviando…' : 'Enviar solicitud'}
-            </button>
-          )}
+          <button type="button" className={`${styles.btn} ${styles.primary}`} onClick={submit} disabled={status === 'sending'}>
+            {status === 'sending' ? 'Enviando…' : 'Enviar'}
+          </button>
         </div>
       </div>
     </main>
@@ -238,6 +213,25 @@ function FieldInput({ field, value, setValue, toggleValue, styles }) {
             <span>{opt}</span>
           </label>
         ))}
+      </div>
+    )
+  }
+  if (field.type === 'range') {
+    const current = value !== undefined && value !== null && value !== '' ? Number(value) : (field.default ?? field.min)
+    const formatted = new Intl.NumberFormat('es-ES').format(current)
+    return (
+      <div className={styles.rangeWrap}>
+        <input
+          type="range"
+          min={field.min}
+          max={field.max}
+          step={field.step}
+          value={current}
+          onChange={(e) => setValue(field.name, e.target.value)}
+        />
+        <output className={styles.rangeValue}>
+          {formatted} €{current >= field.max ? '+' : ''}
+        </output>
       </div>
     )
   }
