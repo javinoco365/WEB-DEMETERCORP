@@ -99,3 +99,31 @@ nav a:hover{color:var(--navy)}
 .text-link{display:inline-flex;margin-top:18px;font-weight:700;text-decoration:none;color:inherit;border-bottom:1px solid currentColor;padding-bottom:3px}.text-link:hover{opacity:.65}
 .form label{font-size:13px;font-weight:700;color:var(--navy);display:grid;gap:7px}.form-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}.form select{width:100%;padding:14px 15px;border:1px solid #cfd7dd;background:white;font:inherit;color:var(--ink)}.privacy-check{display:flex!important;grid-template-columns:auto 1fr!important;align-items:flex-start;gap:9px!important;font-weight:400!important;color:var(--muted)!important}.privacy-check input{width:auto;margin-top:4px}.privacy-check a{text-decoration:underline;color:var(--navy)}.hp{position:absolute!important;left:-9999px!important}.form-status{margin:0;padding:12px 14px;font-size:14px}.form-status.sent{background:#eef7f1;color:#205a38}.form-status.error{background:#fff0f0;color:#8a2525}.contact-copy h2{font-family:Georgia,'Times New Roman',serif;color:var(--navy);font-size:42px;margin:0 0 16px;font-weight:500}.contact-principles{display:grid;gap:18px;margin-top:34px}.contact-principles div{border-top:1px solid var(--line);padding-top:16px}.contact-principles b,.contact-principles span{display:block}.contact-principles span{color:var(--muted);font-size:14px;margin-top:4px}.legal-page{background:white;padding:90px 0 110px}.prose{max-width:900px}.prose h1{font-family:Georgia,'Times New Roman',serif;color:var(--navy);font-size:54px;font-weight:500;margin:8px 0 34px}.prose h2{font-family:Georgia,'Times New Roman',serif;color:var(--navy);font-size:28px;font-weight:500;margin:38px 0 10px}.prose p{color:#42515f;font-size:16px;line-height:1.75}.legal-note{margin-top:46px;padding:18px 20px;border-left:3px solid var(--gold);background:var(--paper);font-size:13px!important}.footer .eyebrow{margin-bottom:6px}@media(max-width:900px){.form-row{grid-template-columns:1fr}}
 .back-link{display:inline-block;margin-bottom:18px;font-size:13px;letter-spacing:.04em;color:var(--steel2);opacity:.85}.back-link:hover{opacity:1;color:white}
+
+.header-ctas{display:flex;gap:10px;align-items:center}
+.btn.small{padding:10px 16px;font-size:13px}
+.btn.outline-dark{border-color:rgba(11,34,56,.3);color:var(--navy)}
+.btn.outline-dark:hover{background:rgba(11,34,56,.05)}
+.company-grid{grid-template-columns:repeat(4,1fr)}
+.values.cols-4{grid-template-columns:repeat(4,1fr)}
+.steps-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.18)}
+.step{padding:30px;background:rgba(255,255,255,.04)}
+.step strong{display:block;font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--gold);margin-bottom:12px}
+.step p{color:#cad6df;font-size:14px;line-height:1.65;margin:0}
+.project-meta{font-size:11px;letter-spacing:.1em;color:var(--steel);font-weight:700;text-transform:uppercase;margin-bottom:12px}
+.confidential-badge{display:inline-block;font-size:11px;letter-spacing:.08em;color:var(--steel);border:1px solid var(--line);padding:5px 10px;margin-top:16px;text-transform:uppercase}
+.faq-item{border-top:1px solid var(--line);padding:24px 0}
+.faq-item:last-child{border-bottom:1px solid var(--line)}
+.faq-item b{display:block;color:var(--navy);margin-bottom:8px;font-size:17px}
+.faq-item p{color:var(--muted);margin:0;font-size:15px;line-height:1.65}
+.sector-block{padding:60px 0;border-top:1px solid var(--line)}
+.sector-block:first-child{border-top:0;padding-top:0}
+.sector-block .eyebrow{margin-bottom:14px}
+.sector-block h2{font-family:Georgia,'Times New Roman',serif;font-size:32px;color:var(--navy);margin:0 0 20px;font-weight:500}
+.sector-block p{color:#42515f;font-size:17px;line-height:1.75;max-width:860px;margin:0 0 16px}
+.dossier-note{font-size:13px;color:var(--muted);line-height:1.7;margin-top:18px;padding-top:18px;border-top:1px solid var(--line)}
+@media(max-width:900px){
+ .header-ctas{display:none}
+ .company-grid,.values.cols-4,.steps-grid{grid-template-columns:1fr 1fr}
+}
+@media(max-width:560px){.company-grid,.values.cols-4,.steps-grid{grid-template-columns:1fr}}
