@@ -1,4 +1,5 @@
 import DossierForm from '../../components/DossierForm'
+import HeroArt from '../../components/HeroArt'
 
 export const metadata={title:'Inversores — Acceso al dossier | Grupo Demeter',description:'Grupo Demeter estructura entradas de capital en activos reales: agua, energía, infraestructura y patrimonio. Acceso al dossier bajo NDA.'}
 
@@ -30,7 +31,7 @@ const faq=[
 ]
 
 export default function Inversores(){return <>
- <section className="page-hero"><div className="shell"><span className="eyebrow">INVERSORES</span><h1>Antes de hablar de rentabilidad, hablamos del activo.</h1></div></section>
+ <section className="page-hero"><div className="shell page-hero-grid"><div><span className="eyebrow">INVERSORES</span><h1>Antes de hablar de rentabilidad, hablamos del activo.</h1></div><div className="page-hero-art"><HeroArt kind="growth" accent="#c7a25b"/></div></div></section>
 
  <section className="section white"><div className="shell content-grid"><div><span className="eyebrow">TESIS DE INVERSIÓN</span></div><div className="copy">
   <p>Grupo Demeter invierte —y busca coinversores para hacerlo— en activos reales dentro de sectores con fundamento estructural: agua y su reutilización, energía y transición energética, infraestructura pública y privada, y patrimonio inmobiliario con potencial de reposicionamiento. La tesis no es sectorial en abstracto: es sobre el tipo de activo. Buscamos operaciones donde exista una necesidad real y donde la complejidad técnica o administrativa de la operación limite la competencia de otros compradores o inversores.</p>
@@ -49,7 +50,7 @@ export default function Inversores(){return <>
 
  <section className="section white"><div className="shell"><div className="section-head"><div><span className="eyebrow">PROCESO</span></div><div><h2>De la solicitud a la reunión técnica.</h2></div></div><div className="steps-grid" style={{background:'var(--line)',border:'1px solid var(--line)'}}>{proceso.map(p=><div className="step" key={p[0]} style={{background:'white'}}><strong style={{color:'var(--navy)'}}>{p[0]} · {p[1]}</strong><p style={{color:'var(--muted)'}}>{p[2]}</p></div>)}</div></div></section>
 
- <section className="section"><div className="shell content-grid"><div><span className="eyebrow">PREGUNTAS FRECUENTES</span></div><div>{faq.map(f=><div className="faq-item" key={f[0]}><b>{f[0]}</b><p>{f[1]}</p></div>)}</div></div></section>
+ <section className="section"><div className="shell content-grid"><div><span className="eyebrow">PREGUNTAS FRECUENTES</span></div><div>{faq.map(f=><details className="faq-item" key={f[0]}><summary>{f[0]}</summary><p>{f[1]}</p></details>)}</div></div></section>
 
  <section className="section white" id="dossier"><div className="shell contact-grid">
   <div className="contact-copy"><span className="eyebrow">SOLICITAR ACCESO</span><h2>Solicitar acceso al dossier</h2><p className="lead">Revisamos cada solicitud de forma individual. Si acredita interés real, le haremos llegar un acuerdo de confidencialidad y, después, el dossier correspondiente a su perfil.</p></div>

@@ -28,8 +28,10 @@ const empresas=[
  ]},
 ]
 
+import HeroArt from '../../components/HeroArt'
+
 export default function Empresas(){return <>
- <section className="page-hero"><div className="shell"><span className="eyebrow">EMPRESAS DEL GRUPO</span><h1>Cuatro sociedades. Una misma matriz. Ningún riesgo compartido por defecto.</h1><p>Grupo Demeter no opera como una empresa única que abarca todo. Opera como una estructura en holding, con Demeter Corp como cabecera y tres sociedades especializadas bajo su gobierno.</p></div></section>
+ <section className="page-hero"><div className="shell page-hero-grid"><div><span className="eyebrow">EMPRESAS DEL GRUPO</span><h1>Cuatro sociedades. Una misma matriz. Ningún riesgo compartido por defecto.</h1><p>Grupo Demeter no opera como una empresa única que abarca todo. Opera como una estructura en holding, con Demeter Corp como cabecera y tres sociedades especializadas bajo su gobierno.</p></div><div className="page-hero-art"><HeroArt kind="diamond" accent="#c7a25b"/></div></div></section>
 
  <section className="section white"><div className="shell content-grid"><div><span className="eyebrow">POR QUÉ EL HOLDING</span></div><div className="copy">
   <p>Cada sociedad asume su propio riesgo. Un proyecto de infraestructura energética no compromete el patrimonio inmobiliario del grupo, ni una operación de desarrollo urbanístico expone la actividad de consultoría hídrica. Esa separación permite entrar en operaciones de mayor riesgo técnico o administrativo sin trasladar esa exposición al resto del grupo.</p>

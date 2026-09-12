@@ -33,8 +33,10 @@ const sectores=[
  ]},
 ]
 
+import HeroArt from '../../components/HeroArt'
+
 export default function Sectores(){return <>
- <section className="page-hero"><div className="shell"><span className="eyebrow">SECTORES</span><h1>Cinco sectores. Un mismo criterio: activos reales, regulación exigente, ejecución propia.</h1></div></section>
+ <section className="page-hero"><div className="shell page-hero-grid"><div><span className="eyebrow">SECTORES</span><h1>Cinco sectores. Un mismo criterio: activos reales, regulación exigente, ejecución propia.</h1></div><div className="page-hero-art"><HeroArt kind="wave" accent="#089dd8"/></div></div></section>
  <section className="section white"><div className="shell">{sectores.map(s=><div className="sector-block" id={s.id} key={s.id}><span className="eyebrow">{s.name}</span>{s.parrafos.map((p,i)=><p key={i}>{p}</p>)}</div>)}</div></section>
  <section className="section dark"><div className="shell" style={{textAlign:'center'}}><h2 style={{color:'white'}}>Cinco sectores, una misma capacidad de ejecución.</h2><div className="actions" style={{justifyContent:'center'}}><a className="btn primary" href="/inversores#dossier">Solicitar acceso al dossier</a><a className="btn outline-dark" href="/contacto" style={{borderColor:'rgba(255,255,255,.35)',color:'white'}}>Plantear un proyecto</a></div></div></section>
 </>}
