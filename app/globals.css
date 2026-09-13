@@ -153,3 +153,50 @@ nav a:hover{color:var(--navy)}
 .faq-item summary:after{content:'+';font-size:22px;color:var(--gold);flex-shrink:0;transition:transform .2s}
 .faq-item[open] summary:after{content:'−'}
 .faq-item p{margin-top:12px}
+
+/* Empresas: organigrama y fichas con logo */
+.org-chart{margin-top:44px;text-align:center}
+.org-node{display:inline-flex;flex-direction:column;align-items:center;gap:6px;background:white;border:1px solid var(--line);padding:26px 22px 22px;min-width:200px;text-decoration:none;color:var(--navy);transition:.25s}
+.org-node:hover{transform:translateY(-4px);box-shadow:0 18px 50px rgba(18,35,49,.1);border-color:var(--gold)}
+.org-node img{width:96px;height:96px;object-fit:contain;margin-bottom:8px}
+.org-node b{font-size:17px}
+.org-node span{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);font-weight:700}
+.org-node.parent{border-top:3px solid var(--gold)}
+.org-node.parent img{width:118px;height:118px}
+.org-connector{position:relative;height:46px;max-width:66.6%;margin:0 auto}
+.org-connector i{position:absolute;background:#c3ccd3}
+.org-connector i:first-child{left:50%;top:0;width:1px;height:50%}
+.org-connector i:last-child{left:0;right:0;top:50%;height:1px}
+.org-children{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;position:relative}
+.org-children .org-node{width:100%;min-width:0;position:relative}
+.org-children .org-node:before{content:'';position:absolute;left:50%;top:-23px;width:1px;height:23px;background:#c3ccd3}
+.company-profile{align-items:start}
+.company-side{position:sticky;top:110px}
+.company-logo{background:white;border:1px solid var(--line);padding:26px;display:flex;justify-content:center;margin-bottom:22px}
+.company-logo img{width:100%;max-width:180px;height:170px;object-fit:contain}
+.company-role{margin:-4px 0 22px;font-family:Georgia,'Times New Roman',serif;font-size:20px;color:var(--navy)}
+.company-side-title{display:block;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--steel);margin-bottom:10px}
+.company-areas{list-style:none;padding:0;margin:0 0 24px}
+.company-areas li{padding:9px 0 9px 18px;border-top:1px solid var(--line);font-size:14px;color:#42515f;position:relative}
+.company-areas li:last-child{border-bottom:1px solid var(--line)}
+.company-areas li:before{content:'';position:absolute;left:0;top:16px;width:8px;height:2px;background:var(--gold)}
+.company-value{margin-top:34px;padding:28px;background:var(--navy);color:white}
+.company-value .eyebrow{margin-bottom:18px}
+.company-value-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+.company-value-grid b{display:block;font-size:16px;margin-bottom:8px;color:white}
+.company-value-grid p{font-size:14px;line-height:1.6;color:#cad6df;margin:0}
+@media(max-width:900px){
+ .company-side{position:static;display:grid;grid-template-columns:auto 1fr;gap:0 22px;align-items:start}
+ .company-logo{margin:0;grid-row:1/span 5;width:150px}
+ .company-logo img{height:120px}
+ .company-value-grid{grid-template-columns:1fr}
+}
+@media(max-width:560px){
+ .company-side{grid-template-columns:1fr}
+ .company-logo{grid-row:auto;width:100%;margin-bottom:18px}
+ .org-children{grid-template-columns:1fr}
+ .org-connector{display:none}
+ .org-children{margin-top:18px}
+ .org-children .org-node:before{display:none}
+ .org-node{min-width:0;width:100%}
+}
