@@ -1,4 +1,4 @@
-export const metadata={title:'Política de privacidad | Demeter Corp'}
+export const metadata={alternates:{canonical:'/privacidad'},title:'Política de privacidad | Demeter Corp',description:'Cómo trata Demeter Corp los datos personales recogidos en demetercorp.es: responsable, finalidades, base jurídica, conservación y derechos.'}
 export default function Privacidad(){return <main className="legal-page"><div className="shell prose"><span className="eyebrow">PROTECCIÓN DE DATOS</span><h1>Política de Privacidad</h1>
 <p><strong>Responsable:</strong> DEMETER CORP, S.L. · NIF B21885033 · C/ Boticelli, 1, 21450 Cartaya (Huelva), España.</p>
 <h2>Datos que recogemos</h2><p>A través del formulario de contacto podemos recoger nombre y apellidos, empresa, correo electrónico, motivo de contacto y el contenido del mensaje. No solicitamos datos especialmente protegidos mediante este formulario.</p>

@@ -1,4 +1,4 @@
-export const metadata={title:'Proyectos — Grupo Demeter',description:'Selección anonimizada de proyectos de Grupo Demeter en agua, energía, infraestructura y patrimonio. Detalle disponible bajo acuerdo de confidencialidad.'}
+export const metadata={alternates:{canonical:'/proyectos'},title:'Proyectos en agua, energía y patrimonio | Grupo Demeter',description:'Selección anonimizada de proyectos de Grupo Demeter en agua, energía, infraestructura y patrimonio. Detalle disponible bajo acuerdo de confidencialidad.'}
 
 const proyectos=[
  ['AGUA','Planta de regeneración de aguas para reutilización agrícola','Andalucía Occidental','Promotor y gestor de la tramitación','En tramitación','Proyecto de regeneración de aguas residuales tratadas para su reutilización en riego agrícola, en una zona con presión creciente sobre el recurso hídrico convencional. Demeter Water Consulting ha desarrollado el análisis técnico y normativo de viabilidad y acompaña actualmente la tramitación de la concesión administrativa correspondiente, conforme al Reglamento (UE) 2020/741 y al Real Decreto 1085/2024.'],

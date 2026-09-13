@@ -1,4 +1,4 @@
-export const metadata={title:'Empresas del grupo — Demeter Corp, Demeter God, Demeter Water Consulting, Demeter Soluciones Estratégicas',description:'Estructura societaria de Grupo Demeter: cuatro sociedades especializadas en gobierno corporativo, patrimonio inmobiliario, consultoría hídrica y grandes contratos estratégicos.'}
+export const metadata={title:'Empresas del grupo Demeter: cuatro sociedades, una matriz',description:'Demeter Corp, Demeter God, Demeter Water Consulting y Demeter Soluciones Estratégicas: gobierno corporativo, patrimonio inmobiliario, consultoría del agua y grandes contratos.',alternates:{canonical:'/empresas'}}
 
 const empresas=[
  {id:'demeter-corp',name:'DEMETER CORP',tag:'La cabecera del grupo',logo:'/logos/demeter-corp.png',rol:'Sociedad matriz',areas:['Gobierno corporativo','Estrategia y asignación de capital','Relación con inversores y entidades financieras','Estructuración de sociedades vehículo'],aporta:[['Un único interlocutor','Quien quiere relacionarse con el grupo en su conjunto habla con Demeter Corp, no con cuatro sociedades distintas.'],['Disciplina financiera','Estándares comunes de gestión de riesgos, reporting y gobierno para todas las sociedades operativas.'],['Capital donde rinde','Asigna recursos entre las sociedades según el criterio de inversión del grupo, no según la inercia de cada línea.']],parrafos:[
@@ -29,15 +29,16 @@ const empresas=[
 ]
 
 import HeroArt from '../../components/HeroArt'
+import Image from 'next/image'
 
 export default function Empresas(){return <>
  <section className="page-hero"><div className="shell page-hero-grid"><div><span className="eyebrow">EMPRESAS DEL GRUPO</span><h1>Cuatro sociedades. Una misma matriz. Ningún riesgo compartido por defecto.</h1><p>Grupo Demeter no opera como una empresa única que abarca todo. Opera como una estructura en holding, con Demeter Corp como cabecera y tres sociedades especializadas bajo su gobierno.</p></div><div className="page-hero-art"><HeroArt kind="diamond" accent="#c7a25b"/></div></div></section>
 
  <section className="section white" style={{paddingBottom:0}}><div className="shell"><div className="section-head"><div><span className="eyebrow">ESTRUCTURA</span></div><div><h2>Así se organiza el grupo.</h2><p className="lead">Una matriz que gobierna y tres sociedades operativas que ejecutan, cada una en su sector.</p></div></div>
   <div className="org-chart">
-   <a className="org-node parent" href="#demeter-corp"><img src="/logos/demeter-corp.png" alt="Demeter Corp"/><b>Demeter Corp</b><span>Sociedad matriz</span></a>
+   <a className="org-node parent" href="#demeter-corp"><Image src="/logos/demeter-corp.png" alt="Demeter Corp" width={118} height={118}/><b>Demeter Corp</b><span>Sociedad matriz</span></a>
    <div className="org-connector" aria-hidden="true"><i/><i/></div>
-   <div className="org-children">{empresas.filter(e=>e.id!=='demeter-corp').map(e=><a className="org-node" href={'#'+e.id} key={e.id}><img src={e.logo} alt={e.name}/><b>{e.name.split(' ').map(w=>w.charAt(0)+w.slice(1).toLowerCase()).join(' ')}</b><span>{e.rol}</span></a>)}</div>
+   <div className="org-children">{empresas.filter(e=>e.id!=='demeter-corp').map(e=><a className="org-node" href={'#'+e.id} key={e.id}><Image src={e.logo} alt={e.name} width={96} height={96}/><b>{e.name.split(' ').map(w=>w.charAt(0)+w.slice(1).toLowerCase()).join(' ')}</b><span>{e.rol}</span></a>)}</div>
   </div>
  </div></section>
 
@@ -49,7 +50,7 @@ export default function Empresas(){return <>
 
  {empresas.map((e,i)=><section className={'section '+(i%2===0?'':'white')} id={e.id} key={e.id}><div className="shell content-grid company-profile">
   <aside className="company-side">
-   <div className="company-logo"><img src={e.logo} alt={e.name}/></div>
+   <div className="company-logo"><Image src={e.logo} alt={e.name} width={180} height={170}/></div>
    <span className="eyebrow">{e.name}</span>
    <p className="company-role">{e.rol}</p>
    <b className="company-side-title">Áreas de actividad</b>

@@ -1,7 +1,7 @@
 import DossierForm from '../../components/DossierForm'
 import HeroArt from '../../components/HeroArt'
 
-export const metadata={title:'Inversores — Acceso al dossier | Grupo Demeter',description:'Grupo Demeter estructura entradas de capital en activos reales: agua, energía, infraestructura y patrimonio. Acceso al dossier bajo NDA.'}
+export const metadata={alternates:{canonical:'/inversores'},title:'Inversores: coinversión en activos reales | Grupo Demeter',description:'Grupo Demeter estructura entradas de capital en activos reales: agua, energía, infraestructura y patrimonio. Acceso al dossier bajo NDA.'}
 
 const razones=[
  ['Originación propia','No dependemos de intermediarios ni de procesos de venta competida para acceder a las oportunidades que estudiamos. La relación directa con propietarios de activos, administraciones y operadores del sector nos da acceso a operaciones antes de que lleguen —si es que llegan— al mercado abierto.'],
@@ -30,7 +30,10 @@ const faq=[
  ['¿En qué jurisdicción operan las sociedades del grupo?','Todas las sociedades de Grupo Demeter están constituidas conforme a derecho español, con domicilio social en Cartaya (Huelva), y desarrollan su actividad principalmente en España.'],
 ]
 
-export default function Inversores(){return <>
+export default function Inversores(){
+ const faqLd={'@context':'https://schema.org','@type':'FAQPage',mainEntity:faq.map(f=>({'@type':'Question',name:f[0],acceptedAnswer:{'@type':'Answer',text:f[1]}}))}
+ return <>
+ <script type="application/ld+json" dangerouslySetInnerHTML={{__html:JSON.stringify(faqLd)}}/>
  <section className="page-hero"><div className="shell page-hero-grid"><div><span className="eyebrow">INVERSORES</span><h1>Antes de hablar de rentabilidad, hablamos del activo.</h1></div><div className="page-hero-art"><HeroArt kind="growth" accent="#c7a25b"/></div></div></section>
 
  <section className="section white"><div className="shell content-grid"><div><span className="eyebrow">TESIS DE INVERSIÓN</span></div><div className="copy">
