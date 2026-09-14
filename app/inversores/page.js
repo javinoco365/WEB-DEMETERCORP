@@ -1,5 +1,5 @@
 import DossierForm from '../../components/DossierForm'
-import HeroArt from '../../components/HeroArt'
+import Image from 'next/image'
 
 export const metadata={alternates:{canonical:'/inversores'},title:'Inversores: coinversión en activos reales | Grupo Demeter',description:'Grupo Demeter estructura entradas de capital en activos reales: agua, energía, infraestructura y patrimonio. Acceso al dossier bajo NDA.'}
 
@@ -34,7 +34,7 @@ export default function Inversores(){
  const faqLd={'@context':'https://schema.org','@type':'FAQPage',mainEntity:faq.map(f=>({'@type':'Question',name:f[0],acceptedAnswer:{'@type':'Answer',text:f[1]}}))}
  return <>
  <script type="application/ld+json" dangerouslySetInnerHTML={{__html:JSON.stringify(faqLd)}}/>
- <section className="page-hero"><div className="shell page-hero-grid"><div><span className="eyebrow">INVERSORES</span><h1>Antes de hablar de rentabilidad, hablamos del activo.</h1></div><div className="page-hero-art"><HeroArt kind="growth" accent="#c7a25b"/></div></div></section>
+ <section className="page-hero"><div className="shell page-hero-grid"><div><span className="eyebrow">INVERSORES</span><h1>Antes de hablar de rentabilidad, hablamos del activo.</h1></div><div className="page-hero-photo"><Image src="/images/maqueta-embalse-despacho.webp" alt="Maqueta de un embalse y su entorno sobre una mesa de despacho al atardecer" width={1600} height={900} priority sizes="(max-width:900px) 100vw, 40vw"/></div></div></section>
 
  <section className="section white"><div className="shell content-grid"><div><span className="eyebrow">TESIS DE INVERSIÓN</span></div><div className="copy">
   <p>Grupo Demeter invierte —y busca coinversores para hacerlo— en activos reales dentro de sectores con fundamento estructural: agua y su reutilización, energía y transición energética, infraestructura pública y privada, y patrimonio inmobiliario con potencial de reposicionamiento. La tesis no es sectorial en abstracto: es sobre el tipo de activo. Buscamos operaciones donde exista una necesidad real y donde la complejidad técnica o administrativa de la operación limite la competencia de otros compradores o inversores.</p>
