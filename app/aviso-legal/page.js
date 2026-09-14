@@ -1,4 +1,4 @@
-export const metadata={title:'Aviso legal | Demeter Corp'}
+export const metadata={alternates:{canonical:'/aviso-legal'},title:'Aviso legal | Demeter Corp',description:'Aviso legal de demetercorp.es: titular del sitio, condiciones de uso, propiedad intelectual y legislación aplicable.'}
 export default function AvisoLegal(){return <main className="legal-page"><div className="shell prose"><span className="eyebrow">INFORMACIÓN LEGAL</span><h1>Aviso legal</h1>
 <p>En cumplimiento de la legislación vigente, se informa al usuario de que la entidad responsable de este sitio web es <strong>DEMETER CORP, S.L.</strong>, con NIF <strong>B21885033</strong>, domicilio social en <strong>C/ Boticelli, 1, 21450 Cartaya (Huelva), España</strong>, e inscrita en el Registro Mercantil de Huelva, Sección 8, Hoja H-29749, Inscripción 1.</p>
 <p>Las comunicaciones relacionadas con esta web y con protección de datos podrán realizarse mediante el formulario disponible en la página de Contacto.</p>

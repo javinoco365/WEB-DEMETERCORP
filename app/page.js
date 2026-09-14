@@ -1,4 +1,7 @@
 import Link from 'next/link'
+import Image from 'next/image'
+
+export const metadata={alternates:{canonical:'/'}}
 
 export default function Home(){
  const companies=[
@@ -13,7 +16,7 @@ export default function Home(){
  return <>
   <section className="hero"><div className="shell hero-grid">
    <div><span className="eyebrow">GRUPO EMPRESARIAL</span><h1>Capital, técnica<br/><span>y ejecución sobre activos reales.</span></h1><p>Grupo Demeter identifica, estructura y ejecuta oportunidades en agua, energía, infraestructura y patrimonio. Una misma matriz, cuatro sociedades especializadas, un mismo criterio: activos con fundamento, gestionados de principio a fin.</p><div className="actions"><Link className="btn primary" href="/inversores#dossier">Solicitar acceso al dossier</Link><Link className="btn" href="/contacto">Plantear un proyecto</Link></div></div>
-   <img className="hero-logo" src="/logos/demeter-corp.png" alt="Demeter Corp"/>
+   <Image className="hero-logo" src="/logos/demeter-corp.png" alt="Demeter Corp" width={410} height={513} priority/>
   </div></section>
 
   <section className="section white"><div className="shell content-grid"><div><span className="eyebrow">QUIÉNES SOMOS</span></div><div className="copy">
@@ -22,7 +25,7 @@ export default function Home(){
    <p>Esta arquitectura no es burocracia: es la manera de operar con rigor en sectores donde el error técnico o regulatorio cuesta caro, y de ofrecer a un inversor o a un socio institucional una contraparte que entiende el activo antes de hablar de él.</p>
   </div></div></section>
 
-  <section className="section"><div className="shell"><div className="section-head"><div><span className="eyebrow">NUESTRAS EMPRESAS</span></div><div><h2>Cuatro sociedades. Un mismo grupo.</h2><p className="lead">Cada sociedad opera con su propio equipo técnico y su propia responsabilidad sobre el resultado.</p></div></div><div className="company-grid">{companies.map(c=><article className="company-card" key={c.name}><div><img src={c.img} alt={c.name}/><h3>{c.name}</h3><span className="eyebrow">{c.tag}</span><p>{c.txt}</p>{c.external ? <a className="text-link" href={c.href} target="_blank" rel="noopener noreferrer">Leer más →</a> : <Link className="text-link" href={c.href}>Leer más →</Link>}</div></article>)}</div></div></section>
+  <section className="section"><div className="shell"><div className="section-head"><div><span className="eyebrow">NUESTRAS EMPRESAS</span></div><div><h2>Cuatro sociedades. Un mismo grupo.</h2><p className="lead">Cada sociedad opera con su propio equipo técnico y su propia responsabilidad sobre el resultado.</p></div></div><div className="company-grid">{companies.map(c=><article className="company-card" key={c.name}><div><Image src={c.img} alt={c.name} width={118} height={118}/><h3>{c.name}</h3><span className="eyebrow">{c.tag}</span><p>{c.txt}</p>{c.external ? <a className="text-link" href={c.href} target="_blank" rel="noopener noreferrer">Leer más →</a> : <Link className="text-link" href={c.href}>Leer más →</Link>}</div></article>)}</div></div></section>
 
   <section className="section"><div className="shell"><div className="section-head"><div><span className="eyebrow">SECTORES</span></div><div><h2>Cinco verticales, un mismo criterio.</h2></div></div><div className="sector-grid">{verticals.map(v=><div className="sector" key={v[1]}><div className="icon">{v[0]}</div><b>{v[1]}</b><span>{v[2]}</span></div>)}</div></div></section>
 

@@ -1,4 +1,4 @@
-export const metadata={title:'Política de cookies | Demeter Corp'}
+export const metadata={alternates:{canonical:'/cookies'},title:'Política de cookies | Demeter Corp',description:'Política de cookies de demetercorp.es: qué cookies se usan, con qué finalidad y cómo gestionarlas.'}
 export default function Cookies(){return <main className="legal-page"><div className="shell prose"><span className="eyebrow">COOKIES</span><h1>Política de Cookies</h1>
 <p>Esta política se aplica a <strong>demetercorp.es</strong>.</p>
 <h2>1. Qué son las cookies</h2><p>Las cookies son pequeños archivos o tecnologías similares que un sitio web puede almacenar o consultar en el dispositivo del usuario para prestar determinadas funciones.</p>

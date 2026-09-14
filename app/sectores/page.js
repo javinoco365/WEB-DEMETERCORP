@@ -1,4 +1,4 @@
-export const metadata={title:'Sectores — Agua, energía, infraestructura, patrimonio y tecnología | Grupo Demeter',description:'Grupo Demeter opera en agua y reutilización, energía y transición energética, infraestructura y licitación pública, patrimonio inmobiliario y desarrollo tecnológico propio.'}
+export const metadata={alternates:{canonical:'/sectores'},title:'Agua, energía, infraestructura y patrimonio | Grupo Demeter',description:'Grupo Demeter opera en agua y reutilización, energía y transición energética, infraestructura y licitación pública, patrimonio inmobiliario y desarrollo tecnológico propio.'}
 
 const sectores=[
  {id:'agua',name:'AGUA',parrafos:[

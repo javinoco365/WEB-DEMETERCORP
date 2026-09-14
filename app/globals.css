@@ -200,3 +200,9 @@ nav a:hover{color:var(--navy)}
  .org-children .org-node:before{display:none}
  .org-node{min-width:0;width:100%}
 }
+
+/* SEO técnico: imágenes next/image y dirección en el pie */
+.hero-logo{height:auto;width:100%}
+.footer-address{font-style:normal;margin-top:16px;font-size:14px;line-height:1.7;color:#9fb0bf}
+.footer-address a{color:#cad6df;text-decoration:none}
+.footer-address a:hover{color:white}

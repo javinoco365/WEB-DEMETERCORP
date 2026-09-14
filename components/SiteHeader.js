@@ -2,13 +2,14 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 
 export default function SiteHeader({nav}){
   const [open,setOpen]=useState(false)
   return <>
     <header className="site-header">
       <div className="shell header-inner">
-        <Link className="brand" href="/" onClick={()=>setOpen(false)}><img src="/logos/demeter-corp.png" alt="Demeter Corp"/><span><strong>DEMETER</strong> CORP</span></Link>
+        <Link className="brand" href="/" onClick={()=>setOpen(false)}><Image src="/logos/demeter-corp.png" alt="Demeter Corp" width={42} height={42} priority/><span><strong>DEMETER</strong> CORP</span></Link>
         <nav className="desktop-nav">{nav.map(([l,h])=><Link key={h} href={h}>{l}</Link>)}</nav>
         <div className="header-ctas">
           <Link className="btn outline-dark small" href="/contacto">Plantear un proyecto</Link>

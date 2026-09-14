@@ -1,6 +1,6 @@
 import ContactForm from '../../components/ContactForm'
 
-export const metadata={title:'Plantear un proyecto | Grupo Demeter'}
+export const metadata={alternates:{canonical:'/contacto'},title:'Plantear un proyecto | Grupo Demeter',description:'Plantee a Grupo Demeter un proyecto de agua, energía, infraestructura, patrimonio o tecnología. Lo revisa el equipo técnico de la sociedad correspondiente.'}
 
 export default function Contacto(){return <>
   <section className="page-hero"><div className="shell"><span className="eyebrow">PLANTEAR UN PROYECTO</span><h1>Cuéntenos la necesidad técnica.</h1><p>Si representa una administración, una empresa o un propietario de activos con un proyecto concreto en agua, energía, infraestructura, patrimonio o tecnología, este es el camino directo. Para solicitar acceso al dossier de inversores, use el formulario de la <a className="text-link" href="/inversores#dossier" style={{color:'inherit',borderColor:'currentColor'}}>página de Inversores</a>.</p></div></section>
