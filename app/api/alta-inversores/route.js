@@ -43,7 +43,7 @@ export async function POST(req) {
 
     if (!isMailerConfigured()) {
       console.error('GMAIL_USER / GMAIL_APP_PASSWORD no configurados.')
-      return NextResponse.json({ error: 'El servicio de correo aún no está configurado.' }, { status: 503 })
+      return NextResponse.json({ error: 'El envío no está disponible en este momento. Escríbanos directamente a info@demetercorp.es.' }, { status: 503 })
     }
 
     const texto = formatAnswersAsText(body)

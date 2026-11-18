@@ -1,0 +1,33 @@
+# Grupo Demeter
+
+> Grupo empresarial con sede en Cartaya (Huelva, España) especializado en agua, energía, infraestructura, patrimonio inmobiliario y desarrollo tecnológico. Se organiza como una matriz, Demeter Corp, S.L., que gobierna tres sociedades especializadas.
+
+## Datos de la sociedad matriz
+
+- Denominación: Demeter Corp, S.L.
+- NIF: B21885033
+- Domicilio social: C/ Botticelli, 1, 21450 Cartaya (Huelva), España
+- Registro Mercantil de Huelva, Hoja H-29749
+- Correo electrónico: info@demetercorp.es
+- Web: https://demetercorp.es
+
+## Sociedades del grupo
+
+- Demeter Corp, S.L.: sociedad matriz. Gobierno corporativo, estrategia y asignación de capital entre las sociedades operativas.
+- Demeter God, S.L.U.: patrimonio inmobiliario. Adquisición, desarrollo, rehabilitación y explotación de activos inmobiliarios, incluido el alojamiento turístico de gestión propia. Web propia: https://demetergod.com
+- Demeter Water Consulting, S.L.U.: consultoría de gestión del agua. Regeneración y reutilización de aguas, infraestructura hidráulica y concesiones administrativas.
+- Demeter Soluciones Estratégicas, S.L.U.: energía, infraestructura, licitación pública y desarrollo tecnológico propio.
+
+## Páginas principales
+
+- [Inicio](https://demetercorp.es/): qué es el grupo, cómo trabaja y a quién se dirige.
+- [Empresas](https://demetercorp.es/empresas): estructura del grupo y ficha de cada sociedad.
+- [Sectores](https://demetercorp.es/sectores): agua, energía, infraestructura, patrimonio inmobiliario y tecnología.
+- [Proyectos](https://demetercorp.es/proyectos): selección anonimizada de proyectos.
+- [Inversores](https://demetercorp.es/inversores): tesis de inversión, formatos de coinversión, proceso y preguntas frecuentes.
+- [Contacto](https://demetercorp.es/contacto): formulario para plantear un proyecto.
+- [Aviso legal](https://demetercorp.es/aviso-legal)
+
+## Nota
+
+La información de este sitio no constituye una oferta de valores negociables ni asesoramiento de inversión. El detalle de cada operación se comparte únicamente bajo acuerdo de confidencialidad.

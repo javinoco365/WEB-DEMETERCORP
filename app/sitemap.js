@@ -1,6 +1,6 @@
 export default function sitemap(){
   const base='https://demetercorp.es'
-  const now=new Date()
+  // Sin lastModified: una fecha de build idéntica en todas las URLs no aporta nada.
   const pages=[
     ['/',1,'weekly'],
     ['/empresas',.9,'monthly'],
@@ -12,5 +12,5 @@ export default function sitemap(){
     ['/privacidad',.2,'yearly'],
     ['/cookies',.2,'yearly'],
   ]
-  return pages.map(([p,priority,changeFrequency])=>({url:base+p,lastModified:now,changeFrequency,priority}))
+  return pages.map(([p,priority,changeFrequency])=>({url:base+p,changeFrequency,priority}))
 }

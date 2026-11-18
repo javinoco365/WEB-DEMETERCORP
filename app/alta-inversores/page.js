@@ -1,7 +1,7 @@
 import Wizard from './Wizard'
 
 export const metadata = {
-  title: 'Alta de inversores | Demeter Corp',
+  title: 'Alta de inversores',
   description: 'Cuéntenos qué busca y le avisaremos cuando tengamos una oportunidad que encaje.',
   robots: { index: false, follow: false },
 }
