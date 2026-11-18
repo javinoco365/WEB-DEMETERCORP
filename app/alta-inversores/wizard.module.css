@@ -1,34 +1,66 @@
-.wrap { max-width: 640px; margin: 0 auto; padding: 56px 0 100px }
-.card { width: 100%; background: #ffffff; border: 1px solid #d7dfe6; border-radius: 6px; padding: 32px 24px; box-shadow: 0 10px 40px rgba(11, 61, 99, .08) }
-.card.center { text-align: center }
-.card h1 { font-family: inherit; font-size: 26px; margin: 10px 0 12px; color: #0b3d63; font-weight: 700 }
-.intro { color: #5b6b78; font-size: 15px; margin-bottom: 8px }
+/* Alta de inversores: mismo sistema visual que el resto de la web
+   (variables de app/globals.css, sin esquinas redondeadas). */
+.wrap { width: min(640px, calc(100% - 32px)); margin: 0 auto; padding: 56px 0 100px }
+.card { width: 100%; background: var(--white); border: 1px solid var(--line); padding: 36px 32px; box-shadow: 0 10px 40px rgba(11, 34, 56, .06) }
+.card:focus { outline: none }
+.card.center { text-align: center; animation: cardIn .5s var(--ease) both }
+.card h1 { font-family: Georgia, 'Times New Roman', serif; font-size: 32px; line-height: 1.15; margin: 4px 0 12px; color: var(--navy); font-weight: 500 }
+.intro { color: var(--muted); font-size: 15px; margin: 0 0 8px }
+
+.progress { margin-top: 24px }
+.bar { height: 3px; background: var(--line); overflow: hidden }
+.bar i { display: block; height: 100%; background: var(--bronze); transform-origin: left; transition: transform .4s var(--ease) }
+.stepList { list-style: none; display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin: 10px 0 0; padding: 0; font-size: 12px; letter-spacing: .06em; text-transform: uppercase; color: var(--muted) }
+.stepList li:nth-child(2) { text-align: center }
+.stepList li:nth-child(3) { text-align: right }
+.stepCurrent { color: var(--navy); font-weight: 700 }
+.stepDone { color: var(--gold-text) }
+
+.step { animation: stepIn var(--t-med) var(--ease) both }
+.stepBack { animation-name: stepInBack }
+.stepTitle { font-family: Georgia, 'Times New Roman', serif; font-size: 22px; font-weight: 500; color: var(--navy); margin: 28px 0 0; outline: none }
+.stepTitle span { display: block; font-family: Arial, Helvetica, sans-serif; font-size: 12px; letter-spacing: .18em; text-transform: uppercase; font-weight: 700; color: var(--gold-text); margin-bottom: 6px }
+
 .fields { display: grid; gap: 22px; margin-top: 20px }
-.field { display: grid; gap: 6px }
-.fieldLabel { font-size: 14px; font-weight: 700; color: #0b3d63 }
-.fieldHelp { font-size: 12px; color: #5b6b78 }
+.field { display: grid; gap: 6px; scroll-margin-top: 100px }
+.fieldLabel { font-size: 14px; font-weight: 700; color: var(--navy) }
+.fieldHelp { font-size: 13px; color: var(--muted) }
 .card input[type=text], .card input[type=email], .card input[type=tel], .card textarea {
-  width: 100%; padding: 12px 13px; border: 1px solid #d7dfe6; border-radius: 4px; font: inherit; color: #122437;
+  width: 100%; padding: 13px 14px; border: 1px solid #cfd7dd; border-radius: 0; background: var(--white); font: inherit; font-size: 16px; color: var(--ink);
 }
+.card input[aria-invalid=true], .card textarea[aria-invalid=true] { border-color: #8a2525 }
 .card textarea { min-height: 100px; resize: vertical }
-.options { display: grid; gap: 8px }
-.option { display: flex; align-items: flex-start; gap: 8px; font-size: 14px; color: #122437 }
-.option input { margin-top: 3px }
+.options { display: grid; gap: 2px }
+.option { display: flex; align-items: center; gap: 12px; min-height: 44px; font-size: 15px; color: var(--ink); cursor: pointer }
+.option input, .consentCheck input { width: 20px; height: 20px; flex: none; margin: 0; accent-color: var(--navy) }
 .rangeWrap { display: grid; gap: 10px }
-.rangeWrap input[type=range] { width: 100%; accent-color: #0b3d63 }
-.rangeValue { font-size: 17px; font-weight: 700; color: #0b3d63 }
-.fieldError { font-size: 12px; color: #b3261e }
-.consent { margin-top: 28px; padding-top: 20px; border-top: 1px solid #d7dfe6; display: grid; gap: 12px }
-.consentText { font-size: 12px; color: #5b6b78; line-height: 1.6 }
-.consentCheck { display: flex; gap: 9px; align-items: flex-start; font-size: 13px }
-.consentCheck input { margin-top: 3px }
+.rangeWrap input[type=range] { width: 100%; min-height: 32px; accent-color: var(--navy) }
+.rangeValue { font-size: 17px; font-weight: 700; color: var(--navy) }
+.fieldError { font-size: 13px; color: #8a2525; animation: errIn .2s ease-out }
+.consent { margin-top: 28px; padding-top: 20px; border-top: 1px solid var(--line); display: grid; gap: 12px }
+.consentText { font-size: 13px; color: var(--muted); line-height: 1.6; margin: 0 }
+.consentCheck { display: flex; gap: 12px; align-items: flex-start; min-height: 44px; font-size: 14px; cursor: pointer }
+.consentCheck input { margin-top: 1px }
 .hp { position: absolute !important; left: -9999px !important }
-.sendError { color: #b3261e; font-size: 14px; margin-top: 16px }
+.sendError { color: #8a2525; background: #fff0f0; font-size: 14px; margin: 20px 0 0; padding: 12px 14px }
 .actionsRow { display: flex; justify-content: flex-end; gap: 12px; margin-top: 28px }
-.btn { padding: 13px 20px; border-radius: 4px; border: 1px solid #d7dfe6; background: #ffffff; color: #0b3d63; font-weight: 700; font-size: 14px; cursor: pointer; font-family: inherit }
-.btn.primary { background: #0b3d63; border-color: #0b3d63; color: #ffffff }
-.btn.primary:disabled { opacity: .6; cursor: default }
+.btn { min-height: 46px; padding: 13px 22px; border-radius: 0; border: 1px solid rgba(11, 34, 56, .3); background: var(--white); color: var(--navy); font-weight: 700; font-size: 14px; letter-spacing: .04em; cursor: pointer; font-family: inherit }
+.btn.primary { background: var(--navy); border-color: var(--navy); color: var(--white) }
+.btn:disabled { opacity: .6; cursor: default }
+
+@keyframes stepIn { from { opacity: 0; transform: translateX(16px) } }
+@keyframes stepInBack { from { opacity: 0; transform: translateX(-16px) } }
+@keyframes cardIn { from { opacity: 0; transform: translateY(12px) } }
+@keyframes errIn { from { opacity: 0; transform: translateY(-4px) } }
+
 @media (max-width: 480px) {
+  .wrap { padding: 28px 0 72px }
   .card { padding: 26px 18px }
-  .card h1 { font-size: 22px }
+  .card h1 { font-size: 26px }
+  .stepList { font-size: 11px; letter-spacing: .02em }
+  .actionsRow .btn { flex: 1 }
+}
+@media (prefers-reduced-motion: reduce) {
+  .step, .card.center, .fieldError { animation: none }
+  .bar i { transition: none }
 }

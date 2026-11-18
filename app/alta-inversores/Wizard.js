@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { FIELDS } from './lib/fields'
 import styles from './wizard.module.css'
 
@@ -10,6 +10,20 @@ function defaultAnswers() {
   const initial = {}
   for (const f of FIELDS) if (f.type === 'range') initial[f.name] = f.default ?? f.min
   return initial
+}
+
+// Tres pasos cortos en lugar de un formulario largo. Cada paso valida solo sus
+// campos; el envío final manda exactamente el mismo cuerpo que antes a la API.
+const STEPS = [
+  { title: 'Quién es', fields: ['nombre_completo', 'email', 'telefono'] },
+  { title: 'Qué busca', fields: ['busca_ahora', 'tipologias', 'zonas_compra', 'importe_maximo', 'descarta_operacion'] },
+  { title: 'Aviso y envío', fields: ['aviso_preferido'] },
+]
+const FIELD_BY_NAME = Object.fromEntries(FIELDS.map((f) => [f.name, f]))
+const LAST = STEPS.length - 1
+
+function prefersReducedMotion() {
+  return typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches
 }
 
 export default function Wizard() {
@@ -22,6 +36,11 @@ export default function Wizard() {
   const [status, setStatus] = useState('form') // form | sending | sent | error
   const [sendError, setSendError] = useState('')
   const [hydrated, setHydrated] = useState(false)
+  const [step, setStep] = useState(0)
+  const [direction, setDirection] = useState('forward')
+  const stepTitleRef = useRef(null)
+  const sentRef = useRef(null)
+  const firstRender = useRef(true)
 
   useEffect(() => {
     try {
@@ -45,6 +64,23 @@ export default function Wizard() {
     } catch {}
   }, [answers, hydrated])
 
+  // Al cambiar de paso: arriba de la tarjeta y foco en el título del paso.
+  useEffect(() => {
+    if (firstRender.current) {
+      firstRender.current = false
+      return
+    }
+    window.scrollTo({ top: 0 })
+    stepTitleRef.current?.focus({ preventScroll: true })
+  }, [step])
+
+  // Tras enviar: la confirmación siempre a la vista y con el foco.
+  useEffect(() => {
+    if (status !== 'sent') return
+    window.scrollTo({ top: 0 })
+    sentRef.current?.focus({ preventScroll: true })
+  }, [status])
+
   function setValue(name, value) {
     setAnswers((prev) => ({ ...prev, [name]: value }))
     setErrors((prev) => ({ ...prev, [name]: undefined }))
@@ -66,22 +102,63 @@ export default function Wizard() {
     return !String(v).trim()
   }
 
-  function validate() {
-    const nextErrors = {}
-    for (const field of FIELDS) {
-      if (field.required && isEmpty(field)) nextErrors[field.name] = 'Campo obligatorio.'
-      if (field.type === 'email' && answers[field.name] && !/^\S+@\S+\.\S+$/.test(answers[field.name])) {
-        nextErrors[field.name] = 'Email no válido.'
+  // Valida los campos de un paso y devuelve sus errores.
+  function validateStep(index) {
+    const stepErrors = {}
+    for (const name of STEPS[index].fields) {
+      const field = FIELD_BY_NAME[name]
+      if (field.required && isEmpty(field)) stepErrors[name] = 'Campo obligatorio.'
+      if (field.type === 'email' && answers[name] && !/^\S+@\S+\.\S+$/.test(answers[name])) {
+        stepErrors[name] = 'Correo electrónico no válido.'
       }
     }
-    setErrors(nextErrors)
-    return Object.keys(nextErrors).length === 0
+    setErrors((prev) => {
+      const next = { ...prev }
+      for (const name of STEPS[index].fields) next[name] = stepErrors[name]
+      return next
+    })
+    return stepErrors
+  }
+
+  // Lleva la vista y el foco al primer campo con error.
+  function focusFirstError(stepErrors) {
+    const first = Object.keys(stepErrors)[0]
+    if (!first) return
+    requestAnimationFrame(() => {
+      const el = document.getElementById('f-' + first)
+      if (!el) return
+      el.scrollIntoView({ behavior: prefersReducedMotion() ? 'auto' : 'smooth', block: 'center' })
+      el.querySelector('input,textarea')?.focus({ preventScroll: true })
+    })
+  }
+
+  function next() {
+    const stepErrors = validateStep(step)
+    if (Object.keys(stepErrors).length) return focusFirstError(stepErrors)
+    setDirection('forward')
+    setStep((s) => Math.min(s + 1, LAST))
+  }
+
+  function back() {
+    setDirection('back')
+    setStep((s) => Math.max(s - 1, 0))
   }
 
   async function submit() {
-    if (!validate()) return
+    // Se revalidan todos los pasos por si el borrador guardado llega incompleto.
+    for (let i = 0; i <= LAST; i++) {
+      const stepErrors = validateStep(i)
+      if (Object.keys(stepErrors).length) {
+        if (i !== step) {
+          setDirection('back')
+          setStep(i)
+        }
+        return focusFirstError(stepErrors)
+      }
+    }
     if (!consent) {
       setConsentError('Debe aceptar para poder enviar el formulario.')
+      requestAnimationFrame(() => document.getElementById('f-consentimiento')?.focus())
       return
     }
     setConsentError('')
@@ -100,7 +177,7 @@ export default function Wizard() {
           consentimiento_fecha: new Date().toISOString(),
         }),
       })
-      const data = await res.json()
+      const data = await res.json().catch(() => ({}))
       if (!res.ok) throw new Error(data.error || 'No se pudo enviar el formulario.')
       try {
         window.localStorage.removeItem(STORAGE_KEY)
@@ -115,57 +192,119 @@ export default function Wizard() {
   if (status === 'sent') {
     return (
       <main className={styles.wrap}>
-        <div className={`${styles.card} ${styles.center}`}>
+        <div className={`${styles.card} ${styles.center}`} ref={sentRef} tabIndex={-1} role="status">
           <h1>Recibido</h1>
-          <p>Gracias, a partir de ahora solo le escribiremos cuando tengamos algo que encaje con lo que nos ha contado.</p>
+          <p>Gracias. A partir de ahora, solo le escribiremos cuando tengamos algo que encaje con lo que nos ha contado.</p>
         </div>
       </main>
     )
   }
+
+  const current = STEPS[step]
 
   return (
     <main className={styles.wrap}>
       <div className={styles.card}>
         <h1>Cuéntenos qué busca</h1>
         <p className={styles.intro}>
-          Menos de dos minutos. Trabajamos operaciones off-market y en exclusiva — si algo encaja con lo que nos
+          Menos de dos minutos. Trabajamos operaciones fuera de mercado y en exclusiva: si algo encaja con lo que nos
           cuenta, le avisamos; si no, no le molestamos.
         </p>
 
-        <div className={styles.fields}>
-          {FIELDS.map((field) => (
-            <div className={styles.field} key={field.name}>
-              <label className={styles.fieldLabel}>
-                {field.label}
-                {field.required && ' *'}
-              </label>
-              {field.help && <span className={styles.fieldHelp}>{field.help}</span>}
-              <FieldInput field={field} value={answers[field.name]} setValue={setValue} toggleValue={toggleValue} styles={styles} />
-              {errors[field.name] && <span className={styles.fieldError}>{errors[field.name]}</span>}
-            </div>
-          ))}
+        <div className={styles.progress}>
+          <div
+            className={styles.bar}
+            role="progressbar"
+            aria-label="Progreso del formulario"
+            aria-valuemin={1}
+            aria-valuemax={STEPS.length}
+            aria-valuenow={step + 1}
+            aria-valuetext={`Paso ${step + 1} de ${STEPS.length}: ${current.title}`}
+          >
+            <i style={{ transform: `scaleX(${(step + 1) / STEPS.length})` }} />
+          </div>
+          <ol className={styles.stepList} aria-hidden="true">
+            {STEPS.map((s, i) => (
+              <li key={s.title} className={i === step ? styles.stepCurrent : i < step ? styles.stepDone : undefined}>
+                {s.title}
+              </li>
+            ))}
+          </ol>
         </div>
 
-        <div className={styles.consent}>
-          <p className={styles.consentText}>
-            Responsable: Demeter Soluciones Estratégicas, S.L. — CIF B22629844 — Calle Botticelli 1, 21450 Cartaya
-            (Huelva). Finalidad: gestionar su perfil inversor y remitirle oportunidades que encajen con los criterios
-            indicados. Legitimación: su consentimiento. Conservación: mientras se mantenga la relación o hasta que
-            solicite la supresión. Destinatarios: no cedemos sus datos a terceros. Derechos: acceso, rectificación,
-            supresión y oposición escribiendo a info@demetercorp.es.
-          </p>
-          <label className={styles.consentCheck}>
-            <input
-              type="checkbox"
-              checked={consent}
-              onChange={(e) => {
-                setConsent(e.target.checked)
-                setConsentError('')
-              }}
-            />
-            <span>He leído y acepto el tratamiento de mis datos en los términos indicados. *</span>
-          </label>
-          {consentError && <span className={styles.fieldError}>{consentError}</span>}
+        <div key={step} className={`${styles.step} ${direction === 'back' ? styles.stepBack : ''}`}>
+          <h2 className={styles.stepTitle} ref={stepTitleRef} tabIndex={-1}>
+            <span>
+              Paso {step + 1} de {STEPS.length}
+            </span>
+            {current.title}
+          </h2>
+
+          <div className={styles.fields}>
+            {current.fields.map((name) => {
+              const field = FIELD_BY_NAME[name]
+              const grouped = field.type === 'radio' || field.type === 'checkbox'
+              const inputId = 'i-' + field.name
+              return (
+                <div
+                  className={styles.field}
+                  key={field.name}
+                  id={'f-' + field.name}
+                  role={grouped ? 'group' : undefined}
+                  aria-labelledby={grouped ? 'l-' + field.name : undefined}
+                >
+                  <label className={styles.fieldLabel} id={'l-' + field.name} htmlFor={grouped ? undefined : inputId}>
+                    {field.label}
+                    {field.required && ' *'}
+                  </label>
+                  {field.help && <span className={styles.fieldHelp}>{field.help}</span>}
+                  <FieldInput
+                    field={field}
+                    inputId={inputId}
+                    invalid={Boolean(errors[field.name])}
+                    value={answers[field.name]}
+                    setValue={setValue}
+                    toggleValue={toggleValue}
+                    styles={styles}
+                  />
+                  {errors[field.name] && (
+                    <span className={styles.fieldError} role="alert">
+                      {errors[field.name]}
+                    </span>
+                  )}
+                </div>
+              )
+            })}
+          </div>
+
+          {step === LAST && (
+            <div className={styles.consent}>
+              <p className={styles.consentText}>
+                Responsable: Demeter Soluciones Estratégicas, S.L.U. · NIF B22629844 · Calle Botticelli, 1, 21450
+                Cartaya (Huelva). Finalidad: gestionar su perfil inversor y remitirle oportunidades que encajen con los
+                criterios indicados. Legitimación: su consentimiento. Conservación: mientras se mantenga la relación o
+                hasta que solicite la supresión. Destinatarios: no cedemos sus datos a terceros. Derechos: acceso,
+                rectificación, supresión y oposición escribiendo a info@demetercorp.es.
+              </p>
+              <label className={styles.consentCheck}>
+                <input
+                  id="f-consentimiento"
+                  type="checkbox"
+                  checked={consent}
+                  onChange={(e) => {
+                    setConsent(e.target.checked)
+                    setConsentError('')
+                  }}
+                />
+                <span>He leído y acepto el tratamiento de mis datos en los términos indicados. *</span>
+              </label>
+              {consentError && (
+                <span className={styles.fieldError} role="alert">
+                  {consentError}
+                </span>
+              )}
+            </div>
+          )}
         </div>
 
         <label className={styles.hp} aria-hidden="true">
@@ -173,24 +312,49 @@ export default function Wizard() {
           <input type="text" tabIndex="-1" autoComplete="off" value={honeypot} onChange={(e) => setHoneypot(e.target.value)} />
         </label>
 
-        {status === 'error' && <p className={styles.sendError}>{sendError}</p>}
+        {status === 'error' && (
+          <p className={styles.sendError} role="alert">
+            {sendError}
+          </p>
+        )}
 
         <div className={styles.actionsRow}>
-          <button type="button" className={`${styles.btn} ${styles.primary}`} onClick={submit} disabled={status === 'sending'}>
-            {status === 'sending' ? 'Enviando…' : 'Enviar'}
-          </button>
+          {step > 0 && (
+            <button type="button" className={styles.btn} onClick={back} disabled={status === 'sending'}>
+              Atrás
+            </button>
+          )}
+          {step < LAST ? (
+            <button type="button" className={`${styles.btn} ${styles.primary}`} onClick={next}>
+              Siguiente
+            </button>
+          ) : (
+            <button type="button" className={`${styles.btn} ${styles.primary}`} onClick={submit} disabled={status === 'sending'}>
+              {status === 'sending' ? 'Enviando…' : 'Enviar'}
+            </button>
+          )}
         </div>
       </div>
     </main>
   )
 }
 
-function FieldInput({ field, value, setValue, toggleValue, styles }) {
+function FieldInput({ field, inputId, invalid, value, setValue, toggleValue, styles }) {
   if (field.type === 'text' || field.type === 'email' || field.type === 'tel') {
-    return <input type={field.type} value={value || ''} onChange={(e) => setValue(field.name, e.target.value)} />
+    const autoComplete = { text: 'name', email: 'email', tel: 'tel' }[field.type]
+    return (
+      <input
+        id={inputId}
+        type={field.type}
+        autoComplete={autoComplete}
+        aria-invalid={invalid || undefined}
+        value={value || ''}
+        onChange={(e) => setValue(field.name, e.target.value)}
+      />
+    )
   }
   if (field.type === 'textarea') {
-    return <textarea value={value || ''} onChange={(e) => setValue(field.name, e.target.value)} />
+    return <textarea id={inputId} aria-invalid={invalid || undefined} value={value || ''} onChange={(e) => setValue(field.name, e.target.value)} />
   }
   if (field.type === 'radio') {
     return (
@@ -222,6 +386,7 @@ function FieldInput({ field, value, setValue, toggleValue, styles }) {
     return (
       <div className={styles.rangeWrap}>
         <input
+          id={inputId}
           type="range"
           min={field.min}
           max={field.max}

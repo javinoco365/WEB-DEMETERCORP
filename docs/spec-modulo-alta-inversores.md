@@ -123,7 +123,7 @@ Texto de apertura: *"Solo lo que tenga claro; si no trabaja con una cifra fija, 
 
 Casilla obligatoria antes de enviar, con este texto encima, literal:
 
-> Responsable: Demeter Soluciones Estratégicas, S.L. — CIF B22629844 — Calle Botticelli 1, 21450 Cartaya (Huelva). Finalidad: gestionar su perfil inversor y remitirle oportunidades que encajen con los criterios indicados. Legitimación: su consentimiento. Conservación: mientras se mantenga la relación o hasta que solicite la supresión. Destinatarios: no cedemos sus datos a terceros. Derechos: acceso, rectificación, supresión y oposición escribiendo a info@demetercorp.es.
+> Responsable: Demeter Soluciones Estratégicas, S.L.U. · NIF B22629844 · Calle Botticelli, 1, 21450 Cartaya (Huelva). Finalidad: gestionar su perfil inversor y remitirle oportunidades que encajen con los criterios indicados. Legitimación: su consentimiento. Conservación: mientras se mantenga la relación o hasta que solicite la supresión. Destinatarios: no cedemos sus datos a terceros. Derechos: acceso, rectificación, supresión y oposición escribiendo a info@demetercorp.es.
 
 ### Pantalla final — "Recibido"
 

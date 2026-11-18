@@ -6,7 +6,7 @@
 
 export const FIELDS = [
   { number: 1, name: 'nombre_completo', label: 'Nombre y apellidos', type: 'text', required: true },
-  { number: 2, name: 'email', label: 'Email', type: 'email', required: true },
+  { number: 2, name: 'email', label: 'Correo electrónico', type: 'email', required: true },
   { number: 3, name: 'telefono', label: 'Teléfono', type: 'tel', required: true },
   {
     number: 4,
@@ -49,7 +49,7 @@ export const FIELDS = [
     label: 'Zonas donde compra',
     type: 'textarea',
     required: true,
-    help: 'Cuanto más concreto mejor, «Andalucía» y «Huelva capital» nos llevan a mandarle cosas distintas.',
+    help: 'Cuanto más concreto, mejor: «Andalucía» y «Huelva capital» nos llevan a enviarle oportunidades distintas.',
   },
   {
     number: 7,
@@ -74,7 +74,7 @@ export const FIELDS = [
     name: 'aviso_preferido',
     label: 'Cómo prefiere que le avisemos',
     type: 'radio',
-    options: ['Llamada', 'WhatsApp', 'Email'],
+    options: ['Llamada', 'WhatsApp', 'Correo electrónico'],
   },
 ]
 
