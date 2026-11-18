@@ -8,14 +8,15 @@ export default function DossierForm(){
 
   async function submit(e){
     e.preventDefault()
+    const formElement=e.currentTarget
     setStatus('sending'); setMessage('')
-    const fd=new FormData(e.currentTarget)
+    const fd=new FormData(formElement)
     const payload=Object.fromEntries(fd.entries())
     try{
       const r=await fetch('/api/dossier',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)})
       const data=await r.json()
       if(!r.ok) throw new Error(data.error || 'No se pudo enviar la solicitud.')
-      e.currentTarget.reset()
+      formElement.reset()
       setStatus('sent'); setMessage('Gracias. Hemos recibido su solicitud de acceso al dossier de inversores de Grupo Demeter. Revisamos cada solicitud de forma individual y, si procede, le haremos llegar un acuerdo de confidencialidad en un plazo de 48 horas.')
     }catch(err){
       setStatus('error'); setMessage(err.message || 'Ha ocurrido un error. Inténtelo de nuevo.')

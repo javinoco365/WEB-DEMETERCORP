@@ -8,14 +8,15 @@ export default function ContactForm(){
 
   async function submit(e){
     e.preventDefault()
+    const formElement=e.currentTarget
     setStatus('sending'); setMessage('')
-    const fd=new FormData(e.currentTarget)
+    const fd=new FormData(formElement)
     const payload=Object.fromEntries(fd.entries())
     try{
       const r=await fetch('/api/contact',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)})
       const data=await r.json()
       if(!r.ok) throw new Error(data.error || 'No se pudo enviar el formulario.')
-      e.currentTarget.reset()
+      formElement.reset()
       setStatus('sent'); setMessage('Gracias. Hemos recibido su propuesta. El equipo correspondiente del grupo la revisará y le contactará en los próximos días.')
     }catch(err){
       setStatus('error'); setMessage(err.message || 'Ha ocurrido un error. Inténtelo de nuevo.')
